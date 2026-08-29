@@ -1,0 +1,7994 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>학교 베타 버전</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,"맑은 고딕",sans-serif;
+}
+
+body{
+    background:#f1f5f9;
+    color:#1e293b;
+}
+
+header{
+    min-height:70px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    box-shadow:0 3px 12px #ddd;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    color:#2563eb;
+    font-size:26px;
+    font-weight:bold;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+nav button{
+    border:0;
+    background:none;
+    cursor:pointer;
+    font-size:15px;
+    padding:8px;
+}
+
+nav button:hover{
+    color:#2563eb;
+}
+
+.page{
+    display:none;
+    min-height:calc(100vh - 70px);
+    padding:30px 15px;
+}
+
+.box{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 5px 20px #ddd;
+}
+
+.smallBox{
+    max-width:550px;
+}
+
+h1{
+    margin-bottom:15px;
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+h3{
+    margin-bottom:10px;
+}
+
+.title{
+    color:#2563eb;
+    text-align:center;
+}
+
+.sub{
+    text-align:center;
+    color:#64748b;
+    margin-bottom:25px;
+}
+
+.icon{
+    text-align:center;
+    font-size:60px;
+    margin-bottom:10px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:13px;
+    margin:7px 0;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px #dbeafe;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.btn{
+    width:100%;
+    padding:13px;
+    margin-top:10px;
+    border:0;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#1d4ed8;
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.gray{
+    background:#64748b;
+}
+
+.gray:hover{
+    background:#475569;
+}
+
+.red{
+    background:#dc2626;
+}
+
+.red:hover{
+    background:#b91c1c;
+}
+
+.green{
+    background:#16a34a;
+}
+
+.green:hover{
+    background:#15803d;
+}
+
+.orange{
+    background:#ea580c;
+}
+
+.orange:hover{
+    background:#c2410c;
+}
+
+.purple{
+    background:#7c3aed;
+}
+
+.purple:hover{
+    background:#6d28d9;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.welcome{
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    padding:25px;
+    border-radius:18px;
+    margin-bottom:25px;
+}
+
+.dashLayout{
+    display:grid;
+    grid-template-columns:190px 1fr;
+    gap:15px;
+    align-items:stretch;
+}
+
+.dashSide{
+    display:grid;
+    grid-template-rows:1fr 1fr;
+    gap:15px;
+}
+
+.dashSide button{
+    border:0;
+    border-radius:17px;
+    background:#64748b;
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    padding:18px 10px;
+    transition:.2s;
+}
+
+.dashSide button:hover{
+    background:#475569;
+    transform:translateY(-3px);
+}
+
+.dashMain{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:20px;
+    padding:15px;
+}
+
+.extraMenu{
+    margin-top:15px;
+    padding:18px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:15px;
+}
+
+.menu button{
+    min-height:110px;
+    border:0;
+    border-radius:17px;
+    background:#2563eb;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.menu button:hover{
+    transform:translateY(-4px);
+}
+
+.menu .danger{
+    background:#dc2626;
+}
+
+.chatBox{
+    height:400px;
+    overflow-y:auto;
+    padding:15px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    margin:15px 0;
+}
+
+.chat{
+    background:white;
+    border:1px solid #e2e8f0;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.chatName{
+    font-weight:bold;
+    color:#2563eb;
+}
+
+.chatTime{
+    color:#94a3b8;
+    font-size:11px;
+    margin-top:5px;
+}
+
+.warning{
+    background:#fff7ed;
+    color:#c2410c;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid #fed7aa;
+    margin-bottom:15px;
+}
+
+.item{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:13px;
+    padding:17px;
+    margin-top:12px;
+}
+
+.item h3{
+    color:#2563eb;
+}
+
+.info{
+    color:#64748b;
+    font-size:13px;
+    margin-top:5px;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:999px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.role-student{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.role-teacher{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.role-council{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.formGrid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.formGrid > *{
+    min-width:0;
+}
+
+.notice{
+    padding:15px;
+    border-radius:12px;
+    background:#eff6ff;
+    color:#1e40af;
+    margin-bottom:15px;
+    border:1px solid #bfdbfe;
+}
+
+.dangerNotice{
+    background:#fef2f2;
+    color:#991b1b;
+    border:1px solid #fecaca;
+}
+
+.roomCard{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    padding:18px;
+    margin-top:12px;
+}
+
+.roomCard h3{
+    color:#7c3aed;
+}
+
+.roomHeader{
+    background:linear-gradient(135deg,#7c3aed,#a78bfa);
+    color:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.roomMessage{
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+}
+
+.roomMessageName{
+    color:#7c3aed;
+    font-weight:bold;
+}
+
+.roomChatBox{
+    height:400px;
+    overflow-y:auto;
+    padding:15px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    margin:15px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,
+td{
+    border:1px solid #cbd5e1;
+    padding:12px;
+    text-align:center;
+}
+
+th{
+    background:#eff6ff;
+    color:#1d4ed8;
+}
+
+hr{
+    border:0;
+    border-top:1px solid #e2e8f0;
+}
+
+.empty{
+    text-align:center;
+    color:#94a3b8;
+    padding:25px;
+}
+
+#toast{
+    display:none;
+    white-space:pre-line;
+    line-height:1.5;
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#1e293b;
+    color:white;
+    padding:15px 20px;
+    border-radius:12px;
+    z-index:9999;
+    max-width:90%;
+}
+
+#betaOverlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:rgba(15,23,42,.78);
+    z-index:10000;
+    padding:20px;
+    align-items:center;
+    justify-content:center;
+}
+
+#betaOverlay.show{
+    display:flex;
+}
+
+.betaBox{
+    background:#fff;
+    border-radius:20px;
+    padding:26px;
+    width:100%;
+    max-width:520px;
+}
+
+.betaText{
+    max-height:210px;
+    overflow-y:auto;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    background:#f8fafc;
+    padding:16px;
+    line-height:1.9;
+    margin:15px 0;
+}
+
+#storageBanner{
+    display:none;
+    background:#fef2f2;
+    color:#991b1b;
+    border-bottom:1px solid #fecaca;
+    padding:14px 20px;
+    font-size:14px;
+    line-height:1.6;
+}
+
+#resetArea{
+    margin-top:25px;
+    padding-top:25px;
+    border-top:1px solid #e2e8f0;
+}
+
+.smallText{
+    font-size:12px;
+    color:#64748b;
+    line-height:1.6;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:12px 15px;
+        flex-direction:column;
+        gap:8px;
+    }
+
+    .page{
+        padding:20px 10px;
+    }
+
+    .box{
+        padding:20px;
+    }
+
+    .dashLayout{
+        grid-template-columns:1fr;
+    }
+
+    .dashSide{
+        grid-template-columns:1fr 1fr;
+        grid-template-rows:none;
+    }
+
+    .menu{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .menu button{
+        font-size:14px;
+    }
+
+    .formGrid{
+        grid-template-columns:1fr;
+    }
+
+    table{
+        font-size:13px;
+    }
+
+    th,
+    td{
+        padding:8px 4px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+🏫 SchoolHub
+</div>
+
+<nav>
+<button onclick="showPage('signupPage')">회원가입</button>
+<button onclick="showPage('loginPage')">로그인</button>
+</nav>
+
+</header>
+
+<div id="betaOverlay">
+
+<div class="betaBox">
+
+<h2 class="title">안내</h2>
+
+<div id="betaText" class="betaText">
+
+<p>
+이 사이트는 아직 베타(시험) 버전입니다.
+</p>
+
+<p style="margin-top:12px;">
+부족한 점이 있다면 문의사항에 넣어주세요.
+</p>
+
+<p style="margin-top:12px;">
+시험 중인 기능이라 저장한 내용이
+예고 없이 사라질 수 있습니다.
+중요한 내용은 따로 보관해 주세요.
+</p>
+
+<p style="margin-top:12px;">
+문의사항은 로그인한 뒤
+대시보드에서 열 수 있습니다.
+</p>
+
+</div>
+
+<button
+id="betaButton"
+class="btn"
+onclick="closeBetaNotice()"
+disabled
+>
+확인
+</button>
+
+</div>
+
+</div>
+
+
+<div id="storageBanner"></div>
+
+
+<!-- =========================
+회원가입
+========================= -->
+
+<div id="signupPage" class="page">
+
+<div class="box smallBox">
+
+<div class="icon">🏫</div>
+
+<h1 class="title">
+SchoolHub 회원가입
+</h1>
+
+<p class="sub">
+학교 플랫폼을 이용하려면 회원가입을 해주세요.
+</p>
+
+<div class="notice">
+이름과 ID가 같아도 학년·반·번호가 다르면
+서로 다른 계정으로 구분됩니다.
+</div>
+
+<input
+id="signupName"
+placeholder="이름"
+>
+
+<input
+id="signupId"
+placeholder="아이디"
+>
+
+<input
+id="signupPw"
+type="password"
+placeholder="비밀번호"
+>
+
+<select
+id="signupRole"
+onchange="roleChanged()"
+>
+
+<option value="student">
+👨‍🎓 학생
+</option>
+
+<option value="teacher">
+👩‍🏫 선생님
+</option>
+
+<option value="council">
+🏛 학생회
+</option>
+
+</select>
+
+<div id="signupManagerBox" class="hidden">
+
+<div class="notice dangerNotice">
+선생님·학생회 계정은 아무나 만들 수 없습니다.
+학교에서 안내받은 관리자 비밀번호를 입력해야 가입됩니다.
+</div>
+
+<input
+id="signupManagerPw"
+type="password"
+placeholder="관리자 비밀번호"
+>
+
+</div>
+
+<h3 style="margin-top:18px;">
+📚 소속 정보
+</h3>
+
+<div class="formGrid">
+
+<select id="signupGrade">
+<option value="">학년 선택</option>
+<option value="1">1학년</option>
+<option value="2">2학년</option>
+<option value="3">3학년</option>
+<option value="4">4학년</option>
+<option value="5">5학년</option>
+<option value="6">6학년</option>
+</select>
+
+<input
+id="signupClass"
+type="number"
+min="1"
+placeholder="반"
+/>
+
+</div>
+
+<div id="numberBox">
+
+<input
+id="signupNumber"
+type="number"
+min="1"
+placeholder="번호"
+/>
+
+<p class="info">
+학생과 학생회는 번호를 입력해야 합니다.
+</p>
+
+</div>
+
+<div id="teacherInfo" class="hidden">
+
+<p class="info">
+선생님은 번호를 입력하지 않습니다.
+학년과 반만 입력합니다.
+</p>
+
+</div>
+
+<button
+class="btn"
+onclick="signup()"
+>
+📝 회원가입
+</button>
+
+<button
+class="btn gray"
+onclick="showPage('loginPage')"
+>
+이미 계정이 있나요? 로그인
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+로그인
+========================= -->
+
+<div id="loginPage" class="page">
+
+<div class="box smallBox">
+
+<div class="icon">🔐</div>
+
+<h1 class="title">
+SchoolHub 로그인
+</h1>
+
+<p class="sub">
+가입할 때 입력한 소속 정보로 본인 계정을 찾습니다.
+</p>
+
+<input
+id="loginId"
+placeholder="아이디"
+>
+
+<input
+id="loginPw"
+type="password"
+placeholder="비밀번호"
+>
+
+<select
+id="loginRole"
+onchange="loginRoleChanged()"
+>
+
+<option value="student">
+👨‍🎓 학생
+</option>
+
+<option value="teacher">
+👩‍🏫 선생님
+</option>
+
+<option value="council">
+🏛 학생회
+</option>
+
+</select>
+
+<div class="formGrid">
+
+<select id="loginGrade">
+<option value="">학년</option>
+<option value="1">1학년</option>
+<option value="2">2학년</option>
+<option value="3">3학년</option>
+<option value="4">4학년</option>
+<option value="5">5학년</option>
+<option value="6">6학년</option>
+</select>
+
+<input
+id="loginClass"
+type="number"
+min="1"
+placeholder="반"
+/>
+
+</div>
+
+<div id="loginNumberBox">
+
+<input
+id="loginNumber"
+type="number"
+min="1"
+placeholder="번호"
+/>
+
+</div>
+
+<div id="loginManagerBox" class="hidden">
+
+<input
+id="managerPw"
+type="password"
+placeholder="관리자 비밀번호"
+>
+
+<p class="info">
+선생님·학생회 계정만 입력합니다.
+비밀번호는 학교에서 따로 안내받습니다.
+</p>
+
+</div>
+
+<button
+class="btn"
+onclick="login()"
+>
+🔐 로그인
+</button>
+
+<button
+class="btn gray"
+onclick="showPage('signupPage')"
+>
+📝 회원가입
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+대시보드
+========================= -->
+
+<div id="dashboardPage" class="page">
+
+<div class="box">
+
+<div class="welcome">
+
+<h1>🏠 SchoolHub</h1>
+
+<p id="welcomeText"></p>
+
+</div>
+
+<div class="dashLayout">
+
+<div class="dashSide">
+
+<button onclick="openPage('profilePage')">
+👤<br>프로필
+</button>
+
+<button onclick="toggleExtraMenu()">
+⋯<br>그 외 기능
+</button>
+
+</div>
+
+<div class="dashMain">
+
+<div class="menu">
+
+<button onclick="openPage('chatPage')">
+💬<br>전체 채팅
+</button>
+
+<button onclick="openPage('roomListPage')">
+👥<br>반 단체방
+</button>
+
+<button onclick="openPage('noticePage')">
+📢<br>게시판
+</button>
+
+<button onclick="openPage('votePage')">
+🗳️<br>투표
+</button>
+
+<button onclick="openPage('eventPage')">
+🎉<br>행사
+</button>
+
+<button onclick="openPage('mealPage')">
+🍱<br>급식
+</button>
+
+<button onclick="openPage('schedulePage')">
+📅<br>시간표
+</button>
+
+<button onclick="openPage('inquiryPage')">
+✉️<br>문의사항
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="extraMenu" class="extraMenu hidden">
+
+<h3>그 외 기능</h3>
+
+<button
+class="btn gray"
+onclick="openPage('profilePage')"
+>
+👤 내 프로필
+</button>
+
+<button
+class="btn red"
+onclick="logout()"
+>
+🚪 로그아웃
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================
+전체 채팅
+========================= -->
+
+<div id="chatPage" class="page">
+
+<div class="box">
+
+<h1>💬 전체 채팅</h1>
+
+<div class="warning">
+
+⚠️ 욕설 및 타인 비하 표현 금지<br>
+공백, 특수문자, 숫자를 이용한 우회 표현도 차단합니다.
+
+</div>
+
+<div
+id="chatMessages"
+class="chatBox"
+></div>
+
+<input
+id="chatInput"
+placeholder="메시지를 입력하세요"
+onkeydown="chatEnter(event)"
+>
+
+<button
+class="btn"
+onclick="sendChat()"
+>
+💬 보내기
+</button>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 단체방 목록
+========================= -->
+
+<div id="roomListPage" class="page">
+
+<div class="box">
+
+<h1>👥 반 단체방</h1>
+
+<div
+id="teacherRoomCreateBox"
+class="hidden"
+>
+
+<div class="notice">
+
+👩‍🏫 선생님 전용 기능<br>
+선생님은 자신이 담당하는 학년·반의 단체방을 만들 수 있습니다.
+
+</div>
+
+<h2>➕ 단체방 만들기</h2>
+
+<div class="formGrid">
+
+<select id="roomGrade">
+<option value="">학년</option>
+<option value="1">1학년</option>
+<option value="2">2학년</option>
+<option value="3">3학년</option>
+<option value="4">4학년</option>
+<option value="5">5학년</option>
+<option value="6">6학년</option>
+</select>
+
+<input
+id="roomClass"
+type="number"
+min="1"
+placeholder="반"
+/>
+
+</div>
+
+<input
+id="roomName"
+placeholder="단체방 이름 예: 1학년 3반"
+/>
+
+<button
+class="btn purple"
+onclick="createRoom()"
+>
+➕ 단체방 만들기
+</button>
+
+<hr style="margin:25px 0;">
+
+</div>
+
+<div id="roomPermission"></div>
+
+<div id="roomList"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+문의사항
+========================= -->
+
+<div id="inquiryPage" class="page">
+
+<div class="box">
+
+<h1>✉️ 문의사항</h1>
+
+<div class="notice">
+사이트를 쓰면서 불편한 점이나 고쳤으면 하는 점을 남겨주세요.
+남긴 글은 모두가 볼 수 있습니다.
+</div>
+
+<div class="warning">
+⚠️ 욕설 및 타인 비하 표현 금지<br>
+공백, 특수문자, 숫자를 이용한 우회 표현도 차단합니다.
+</div>
+
+<div id="inquiryMessages" class="chatBox"></div>
+
+<input
+id="inquiryInput"
+placeholder="문의할 내용을 입력하세요"
+onkeydown="inquiryEnter(event)"
+>
+
+<button
+class="btn"
+onclick="sendInquiry()"
+>
+✉️ 문의 남기기
+</button>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 대시보드
+========================= -->
+
+<div id="roomDashboardPage" class="page">
+
+<div class="box">
+
+<div id="roomDashHeader" class="roomHeader"></div>
+
+<div id="roomDashPermission"></div>
+
+<div class="dashLayout">
+
+<div class="dashSide">
+
+<button onclick="openPage('profilePage')">
+👤<br>프로필
+</button>
+
+<button onclick="leaveRoom()">
+🚪<br>단체방 나가기
+</button>
+
+</div>
+
+<div class="dashMain">
+
+<div class="menu">
+
+<button onclick="openRoomPage('roomChatPage')">
+💬<br>우리 반 채팅
+</button>
+
+<button onclick="openRoomPage('roomNoticePage')">
+📢<br>우리 반 게시판
+</button>
+
+<button onclick="openRoomPage('roomVotePage')">
+🗳️<br>우리 반 투표
+</button>
+
+<button onclick="openRoomPage('roomEventPage')">
+🎉<br>우리 반 행사
+</button>
+
+<button onclick="openRoomPage('roomSchedulePage')">
+📅<br>우리 반 시간표
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 게시판
+========================= -->
+
+<div id="roomNoticePage" class="page">
+
+<div class="box">
+
+<h1>📢 우리 반 게시판</h1>
+
+<div id="roomNoticePermission"></div>
+
+<div id="roomNoticeWriterBox">
+
+<textarea
+id="roomNoticeInput"
+placeholder="우리 반에 알릴 내용을 작성하세요"
+></textarea>
+
+<button
+class="btn purple"
+onclick="addRoomNotice()"
+>
+📢 게시글 작성
+</button>
+
+</div>
+
+<div id="roomNoticeList"></div>
+
+<button
+class="btn gray"
+onclick="openRoomPage('roomDashboardPage')"
+>
+← 반 대시보드
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 투표
+========================= -->
+
+<div id="roomVotePage" class="page">
+
+<div class="box">
+
+<h1>🗳️ 우리 반 투표</h1>
+
+<div id="roomVotePermission"></div>
+
+<div id="roomVoteWriterBox">
+
+<input id="roomVoteTitle" placeholder="투표 제목">
+<input id="roomVoteOption1" placeholder="선택지 1">
+<input id="roomVoteOption2" placeholder="선택지 2">
+<input id="roomVoteOption3" placeholder="선택지 3 (선택)">
+
+<button
+class="btn purple"
+onclick="createRoomVote()"
+>
+🗳️ 투표 만들기
+</button>
+
+</div>
+
+<div id="roomVoteList"></div>
+
+<button
+class="btn gray"
+onclick="openRoomPage('roomDashboardPage')"
+>
+← 반 대시보드
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 행사
+========================= -->
+
+<div id="roomEventPage" class="page">
+
+<div class="box">
+
+<h1>🎉 우리 반 행사</h1>
+
+<div id="roomEventPermission"></div>
+
+<div id="roomEventWriterBox">
+
+<input id="roomEventName" placeholder="행사 이름">
+<input id="roomEventDate" type="date">
+
+<button
+class="btn purple"
+onclick="addRoomEvent()"
+>
+🎉 행사 등록
+</button>
+
+</div>
+
+<div id="roomEventList"></div>
+
+<button
+class="btn gray"
+onclick="openRoomPage('roomDashboardPage')"
+>
+← 반 대시보드
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 시간표
+========================= -->
+
+<div id="roomSchedulePage" class="page">
+
+<div class="box">
+
+<h1>📅 우리 반 시간표</h1>
+
+<div id="roomSchedulePermission"></div>
+
+<div id="roomScheduleTeacherBox" class="hidden">
+
+<h2>👩‍🏫 우리 반 시간표 등록</h2>
+
+<p class="info">
+지금 들어와 있는 반의 시간표로 저장됩니다.
+학년과 반은 따로 고르지 않습니다.
+</p>
+
+<select id="roomScheduleDay">
+<option>월요일</option>
+<option>화요일</option>
+<option>수요일</option>
+<option>목요일</option>
+<option>금요일</option>
+</select>
+
+<input id="roomSubject1" placeholder="1교시">
+<input id="roomSubject2" placeholder="2교시">
+<input id="roomSubject3" placeholder="3교시">
+<input id="roomSubject4" placeholder="4교시">
+<input id="roomSubject5" placeholder="5교시">
+
+<button
+class="btn green"
+onclick="saveRoomSchedule()"
+>
+💾 등록하기
+</button>
+
+<hr style="margin:25px 0;">
+
+</div>
+
+<div id="roomScheduleDisplay"></div>
+
+<button
+class="btn gray"
+onclick="openRoomPage('roomDashboardPage')"
+>
+← 반 대시보드
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+반 단체방
+========================= -->
+
+<div id="roomChatPage" class="page">
+
+<div class="box">
+
+<div
+id="roomHeader"
+class="roomHeader"
+></div>
+
+<div class="warning">
+
+⚠️ 이 단체방은 해당 학년·반 구성원만 사용할 수 있습니다.<br>
+욕설 및 타인 비하 표현은 금지됩니다.
+
+</div>
+
+<div
+id="roomMessages"
+class="roomChatBox"
+></div>
+
+<input
+id="roomChatInput"
+placeholder="우리 반에 메시지를 입력하세요"
+onkeydown="roomChatEnter(event)"
+>
+
+<button
+class="btn purple"
+onclick="sendRoomChat()"
+>
+💬 보내기
+</button>
+
+<button
+class="btn gray"
+onclick="openRoomPage('roomDashboardPage')"
+>
+← 반 대시보드
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+게시판
+========================= -->
+
+<div id="noticePage" class="page">
+
+<div class="box">
+
+<h1>📢 학교 게시판</h1>
+
+<div id="noticePermission"></div>
+
+<div id="noticeWriterBox">
+
+<textarea
+id="noticeInput"
+placeholder="게시글을 작성하세요"
+></textarea>
+
+<button
+class="btn"
+onclick="addNotice()"
+>
+📢 게시글 작성
+</button>
+
+</div>
+
+<div id="noticeList"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+투표
+========================= -->
+
+<div id="votePage" class="page">
+
+<div class="box">
+
+<h1>🗳️ 학교 투표</h1>
+
+<div id="voteWriterBox">
+
+<input
+id="voteTitle"
+placeholder="투표 제목"
+>
+
+<input
+id="voteOption1"
+placeholder="선택지 1"
+>
+
+<input
+id="voteOption2"
+placeholder="선택지 2"
+>
+
+<input
+id="voteOption3"
+placeholder="선택지 3 (선택)"
+>
+
+<button
+class="btn"
+onclick="createVote()"
+>
+🗳️ 투표 만들기
+</button>
+
+</div>
+
+<div id="voteList"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+행사
+========================= -->
+
+<div id="eventPage" class="page">
+
+<div class="box">
+
+<h1>🎉 학교 행사</h1>
+
+<div id="eventWriterBox">
+
+<input
+id="eventName"
+placeholder="행사 이름"
+>
+
+<input
+id="eventDate"
+type="date"
+>
+
+<button
+class="btn"
+onclick="addEvent()"
+>
+🎉 행사 등록
+</button>
+
+</div>
+
+<div id="eventList"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+급식
+========================= -->
+
+<div id="mealPage" class="page">
+
+<div class="box">
+
+<h1>🍱 학교 급식</h1>
+
+<div
+id="teacherMealBox"
+class="hidden"
+>
+
+<h2>👩‍🏫 급식 관리</h2>
+
+<input
+id="mealDate"
+type="date"
+>
+
+<textarea
+id="mealText"
+placeholder="급식 내용을 입력하세요"
+></textarea>
+
+<button
+class="btn green"
+onclick="saveMeal()"
+>
+💾 급식 저장
+</button>
+
+<hr style="margin:25px 0;">
+
+</div>
+
+<h2>날짜별 급식 보기</h2>
+
+<input
+id="mealViewDate"
+type="date"
+onchange="loadMeal()"
+>
+
+<div id="mealDisplay"></div>
+
+<h2 style="margin-top:25px;">앞으로의 급식</h2>
+
+<div id="mealUpcoming"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+시간표
+========================= -->
+
+<div id="schedulePage" class="page">
+
+<div class="box">
+
+<h1>📅 시간표</h1>
+
+<div
+id="teacherScheduleBox"
+class="hidden"
+>
+
+<h2>👩‍🏫 시간표 관리</h2>
+
+<div class="formGrid">
+
+<select id="scheduleGrade">
+<option value="">학년</option>
+<option value="1">1학년</option>
+<option value="2">2학년</option>
+<option value="3">3학년</option>
+<option value="4">4학년</option>
+<option value="5">5학년</option>
+<option value="6">6학년</option>
+</select>
+
+<input
+id="scheduleClass"
+type="number"
+min="1"
+placeholder="반"
+/>
+
+</div>
+
+<select id="scheduleDay">
+<option>월요일</option>
+<option>화요일</option>
+<option>수요일</option>
+<option>목요일</option>
+<option>금요일</option>
+</select>
+
+<input id="subject1" placeholder="1교시">
+<input id="subject2" placeholder="2교시">
+<input id="subject3" placeholder="3교시">
+<input id="subject4" placeholder="4교시">
+<input id="subject5" placeholder="5교시">
+
+<button
+class="btn green"
+onclick="saveSchedule()"
+>
+💾 시간표 저장
+</button>
+
+<button
+class="btn purple"
+onclick="viewSchedule()"
+>
+🔍 입력한 학년·반 시간표 보기
+</button>
+
+<hr style="margin:25px 0;">
+
+</div>
+
+<div id="scheduleTarget"></div>
+
+<div id="scheduleDisplay"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+프로필
+========================= -->
+
+<div id="profilePage" class="page">
+
+<div class="box smallBox">
+
+<h1>👤 내 프로필</h1>
+
+<div id="profileData"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+<button
+class="btn red"
+onclick="deleteAccount()"
+>
+🗑️ 계정 삭제
+</button>
+
+<div id="resetArea" class="hidden">
+
+<h3>⚠️ SchoolHub 전체 초기화</h3>
+
+<p class="smallText">
+선생님과 학생회 계정만 실행할 수 있습니다.
+모든 회원, 채팅, 게시판, 투표, 행사,
+급식, 시간표, 단체방 데이터가 삭제됩니다.
+<br>
+삭제 후 복구할 수 없습니다.
+로그인용 관리자 비밀번호가 아니라
+초기화 전용 비밀번호를 입력해야 실행됩니다.
+</p>
+
+<input
+id="resetPw"
+type="text"
+placeholder="초기화 전용 비밀번호"
+>
+
+<p id="resetPwHint" class="smallText"></p>
+
+<button
+class="btn red"
+onclick="resetAllData()"
+>
+🧨 전체 데이터 초기화
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+
+/* =====================================================
+관리자 비밀번호
+
+주의
+이 값은 개발자 도구에서 그대로 읽을 수 있습니다.
+화면 안내 문구는 없앴지만, 아는 학생은 찾아낼 수 있습니다.
+값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
+===================================================== */
+
+const MANAGER_PASSWORD = "9999";
+
+
+/* =====================================================
+전체 초기화 전용 비밀번호
+
+로그인용 관리자 비밀번호와 다른 값입니다.
+초기화 버튼을 누를 때만 사용합니다.
+===================================================== */
+
+const RESET_PASSWORD = "2023.3.1.1,2,3,4,5단지";
+
+
+/* =====================================================
+데이터 저장소
+===================================================== */
+
+const STORAGE = {
+
+    users:"schoolhub_v4_users",
+    chats:"schoolhub_v4_chats",
+    notices:"schoolhub_v4_notices",
+    votes:"schoolhub_v4_votes",
+    events:"schoolhub_v4_events",
+    meals:"schoolhub_v4_meals",
+    schedules:"schoolhub_v4_schedules",
+    rooms:"schoolhub_v4_rooms",
+    roomChats:"schoolhub_v4_room_chats",
+    roomNotices:"schoolhub_v4_room_notices",
+    roomVotes:"schoolhub_v4_room_votes",
+    roomEvents:"schoolhub_v4_room_events",
+    inquiries:"schoolhub_v4_inquiries"
+
+};
+
+
+const OLD_STORAGE = {
+
+    users:"schoolhub_v3_users",
+    chats:"schoolhub_v3_chats",
+    notices:"schoolhub_v3_notices",
+    votes:"schoolhub_v3_votes",
+    events:"schoolhub_v3_events",
+    meals:"schoolhub_v3_meals",
+    schedules:"schoolhub_v3_schedules",
+    rooms:"schoolhub_v3_rooms",
+    roomChats:"schoolhub_v3_room_chats"
+
+};
+
+
+/* =====================================================
+저장소 접근
+
+미리보기 화면이나 시크릿 모드처럼
+localStorage 를 막아 놓은 환경이 있습니다.
+그런 곳에서 바로 예외가 나면
+회원가입 버튼을 눌러도 아무 일이 없는 것처럼 보입니다.
+
+막혀 있으면 화면 메모리에만 저장하고
+사용자에게 상황을 알려 줍니다.
+===================================================== */
+
+const memoryStore = {};
+
+let storageAvailable = (function(){
+
+    try{
+
+        const testKey =
+            "__schoolhub_test__";
+
+        localStorage.setItem(testKey,"1");
+
+        localStorage.removeItem(testKey);
+
+        return true;
+
+    }catch(error){
+
+        return false;
+
+    }
+
+})();
+
+
+function storageGet(key){
+
+    if(storageAvailable){
+
+        try{
+
+            return localStorage.getItem(key);
+
+        }catch(error){
+
+            storageAvailable=false;
+
+        }
+
+    }
+
+
+    return Object.prototype.hasOwnProperty.call(memoryStore,key)
+        ? memoryStore[key]
+        : null;
+
+}
+
+
+function storageSet(key,value){
+
+    memoryStore[key]=value;
+
+
+    if(storageAvailable){
+
+        try{
+
+            localStorage.setItem(key,value);
+
+        }catch(error){
+
+            storageAvailable=false;
+
+            showStorageBanner();
+
+        }
+
+    }
+
+}
+
+
+function storageRemove(key){
+
+    delete memoryStore[key];
+
+
+    if(storageAvailable){
+
+        try{
+
+            localStorage.removeItem(key);
+
+        }catch(error){
+
+            storageAvailable=false;
+
+        }
+
+    }
+
+}
+
+
+function showStorageBanner(){
+
+    const banner =
+        document.getElementById("storageBanner");
+
+
+    if(!banner){
+
+        return;
+
+    }
+
+
+    banner.textContent =
+        "이 화면에서는 데이터를 저장할 수 없습니다. " +
+        "입력한 내용은 새로고침하면 사라집니다. " +
+        "HTML 파일을 내려받아 브라우저에서 직접 열면 정상적으로 저장됩니다.";
+
+    banner.style.display="block";
+
+}
+
+
+/* =====================================================
+빌드 번호에 따른 자동 초기화
+
+파일을 새로 받을 때마다 아래 번호가 바뀝니다.
+저장된 번호와 다르면 이전 데이터를 모두 지우고
+빈 상태로 시작합니다.
+
+실제 학교에서 쓰실 때는 이 기능이 필요 없습니다.
+아래 상수 한 줄과 그 아래 블록을 지우면
+데이터가 계속 유지됩니다.
+===================================================== */
+
+const BUILD_ID = "2026-08-29-04";
+
+
+(function(){
+
+    try{
+
+        const saved =
+            storageGet("schoolhub_build_id");
+
+
+        if(saved !== BUILD_ID){
+
+            Object.values(STORAGE)
+            .forEach(function(key){
+
+                storageRemove(key);
+
+            });
+
+
+            Object.values(OLD_STORAGE)
+            .forEach(function(key){
+
+                storageRemove(key);
+
+            });
+
+
+            storageSet(
+                "schoolhub_build_id",
+                BUILD_ID
+            );
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+})();
+
+
+/* =====================================================
+JSON 로드
+===================================================== */
+
+function loadJSON(key,fallback){
+
+    try{
+
+        const data =
+            storageGet(key);
+
+        if(data === null){
+
+            return fallback;
+
+        }
+
+        return JSON.parse(data);
+
+    }catch(error){
+
+        console.error(error);
+
+        return fallback;
+
+    }
+
+}
+
+
+/*
+v3 데이터를 그대로 이어받습니다.
+회원 비밀번호는 첫 로그인 때 자동으로 해시로 바뀝니다.
+*/
+
+let users =
+    loadJSON(
+        STORAGE.users,
+        loadJSON(OLD_STORAGE.users, [])
+    );
+
+let chats =
+    loadJSON(
+        STORAGE.chats,
+        loadJSON(OLD_STORAGE.chats, [])
+    );
+
+let notices =
+    loadJSON(
+        STORAGE.notices,
+        loadJSON(OLD_STORAGE.notices, [])
+    );
+
+let votes =
+    loadJSON(
+        STORAGE.votes,
+        loadJSON(OLD_STORAGE.votes, [])
+    );
+
+let events =
+    loadJSON(
+        STORAGE.events,
+        loadJSON(OLD_STORAGE.events, [])
+    );
+
+let meals =
+    loadJSON(
+        STORAGE.meals,
+        loadJSON(OLD_STORAGE.meals, {})
+    );
+
+let schedules =
+    loadJSON(
+        STORAGE.schedules,
+        loadJSON(OLD_STORAGE.schedules, {})
+    );
+
+let rooms =
+    loadJSON(
+        STORAGE.rooms,
+        loadJSON(OLD_STORAGE.rooms, [])
+    );
+
+let roomChats =
+    loadJSON(
+        STORAGE.roomChats,
+        loadJSON(OLD_STORAGE.roomChats, {})
+    );
+
+let roomNotices =
+    loadJSON(STORAGE.roomNotices, {});
+
+let roomVotes =
+    loadJSON(STORAGE.roomVotes, {});
+
+let roomEvents =
+    loadJSON(STORAGE.roomEvents, {});
+
+let inquiries =
+    loadJSON(STORAGE.inquiries, []);
+
+
+let currentUser = null;
+
+let currentRoomId = null;
+
+let scheduleViewKey = null;
+
+
+const DAYS = [
+    "월요일",
+    "화요일",
+    "수요일",
+    "목요일",
+    "금요일"
+];
+
+
+/* =====================================================
+저장
+===================================================== */
+
+function saveAll(){
+
+    storageSet(
+        STORAGE.users,
+        JSON.stringify(users)
+    );
+
+    storageSet(
+        STORAGE.chats,
+        JSON.stringify(chats)
+    );
+
+    storageSet(
+        STORAGE.notices,
+        JSON.stringify(notices)
+    );
+
+    storageSet(
+        STORAGE.votes,
+        JSON.stringify(votes)
+    );
+
+    storageSet(
+        STORAGE.events,
+        JSON.stringify(events)
+    );
+
+    storageSet(
+        STORAGE.meals,
+        JSON.stringify(meals)
+    );
+
+    storageSet(
+        STORAGE.schedules,
+        JSON.stringify(schedules)
+    );
+
+    storageSet(
+        STORAGE.rooms,
+        JSON.stringify(rooms)
+    );
+
+    storageSet(
+        STORAGE.roomChats,
+        JSON.stringify(roomChats)
+    );
+
+    storageSet(
+        STORAGE.roomNotices,
+        JSON.stringify(roomNotices)
+    );
+
+    storageSet(
+        STORAGE.roomVotes,
+        JSON.stringify(roomVotes)
+    );
+
+    storageSet(
+        STORAGE.roomEvents,
+        JSON.stringify(roomEvents)
+    );
+
+    storageSet(
+        STORAGE.inquiries,
+        JSON.stringify(inquiries)
+    );
+
+}
+
+
+/* =====================================================
+비밀번호 보호
+
+localStorage에 평문 비밀번호를 두지 않습니다.
+브라우저가 지원하면 SHA-256을 쓰고,
+file:// 처럼 지원되지 않는 환경에서는
+보조 해시를 씁니다.
+
+한계
+이 방식도 브라우저 안에서만 동작하므로
+진짜 서버 인증만큼 안전하지는 않습니다.
+===================================================== */
+
+function makeSalt(){
+
+    if(
+        window.crypto &&
+        window.crypto.getRandomValues
+    ){
+
+        const bytes =
+            new Uint8Array(8);
+
+        window.crypto.getRandomValues(bytes);
+
+        return[...bytes]
+            .map(function(b){
+
+                return b
+                    .toString(16)
+                    .padStart(2,"0");
+
+            })
+            .join("");
+
+    }
+
+
+    return String(
+        Date.now()
+    ) + Math.random()
+        .toString(16)
+        .slice(2);
+
+}
+
+
+function fallbackHash(text){
+
+    let hash = 2166136261;
+
+
+    for(let i=0; i<text.length; i++){
+
+        hash ^= text.charCodeAt(i);
+
+        hash = Math.imul(hash, 16777619);
+
+    }
+
+
+    return(hash >>> 0).toString(16);
+
+}
+
+
+async function hashPassword(password,salt){
+
+    const source =
+        salt + "::" + password;
+
+
+    if(
+        window.crypto &&
+        window.crypto.subtle &&
+        window.crypto.subtle.digest
+    ){
+
+        try{
+
+            const buffer =
+                await window.crypto.subtle.digest(
+                    "SHA-256",
+                    new TextEncoder().encode(source)
+                );
+
+
+            return "sha256:" +
+                [...new Uint8Array(buffer)]
+                .map(function(b){
+
+                    return b
+                        .toString(16)
+                        .padStart(2,"0");
+
+                })
+                .join("");
+
+        }catch(error){
+
+            console.error(error);
+
+        }
+
+    }
+
+
+    return "fnv:" + fallbackHash(source);
+
+}
+
+
+/* =====================================================
+페이지
+===================================================== */
+
+function showPage(id){
+
+    document
+    .querySelectorAll(".page")
+    .forEach(function(page){
+
+        page.style.display="none";
+
+    });
+
+    const page =
+        document.getElementById(id);
+
+    if(page){
+
+        page.style.display="block";
+
+    }
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =====================================================
+역할 변경
+===================================================== */
+
+function roleChanged(){
+
+    const role =
+        document.getElementById("signupRole").value;
+
+    const numberBox =
+        document.getElementById("numberBox");
+
+    const teacherInfo =
+        document.getElementById("teacherInfo");
+
+    const managerBox =
+        document.getElementById("signupManagerBox");
+
+
+    if(
+        role === "student" ||
+        role === "council"
+    ){
+
+        numberBox.classList.remove("hidden");
+
+        teacherInfo.classList.add("hidden");
+
+    }else{
+
+        numberBox.classList.add("hidden");
+
+        teacherInfo.classList.remove("hidden");
+
+    }
+
+
+    if(role === "student"){
+
+        managerBox.classList.add("hidden");
+
+    }else{
+
+        managerBox.classList.remove("hidden");
+
+    }
+
+}
+
+
+/* =====================================================
+로그인 역할 변경
+===================================================== */
+
+function loginRoleChanged(){
+
+    const role =
+        document.getElementById("loginRole").value;
+
+    const numberBox =
+        document.getElementById("loginNumberBox");
+
+    const managerBox =
+        document.getElementById("loginManagerBox");
+
+
+    if(
+        role === "student" ||
+        role === "council"
+    ){
+
+        numberBox.classList.remove("hidden");
+
+    }else{
+
+        numberBox.classList.add("hidden");
+
+    }
+
+
+    if(role === "student"){
+
+        managerBox.classList.add("hidden");
+
+    }else{
+
+        managerBox.classList.remove("hidden");
+
+    }
+
+}
+
+
+/* =====================================================
+사용자 식별
+===================================================== */
+
+function getUserIdentity(){
+
+    if(!currentUser){
+
+        return "";
+
+    }
+
+
+    if(currentUser.role === "teacher"){
+
+        return(
+            currentUser.grade +
+            "-" +
+            currentUser.classNumber
+        );
+
+    }
+
+
+    return(
+        currentUser.grade +
+        "-" +
+        currentUser.classNumber +
+        "-" +
+        currentUser.studentNumber
+    );
+
+}
+
+
+/* =====================================================
+회원가입
+===================================================== */
+
+async function signup(){
+
+    const name =
+        document.getElementById("signupName")
+        .value.trim();
+
+    const id =
+        document.getElementById("signupId")
+        .value.trim();
+
+    const pw =
+        document.getElementById("signupPw")
+        .value;
+
+    const role =
+        document.getElementById("signupRole")
+        .value;
+
+    const grade =
+        document.getElementById("signupGrade")
+        .value;
+
+    const classNumber =
+        document.getElementById("signupClass")
+        .value;
+
+    const number =
+        document.getElementById("signupNumber")
+        .value;
+
+    const managerInput =
+        document.getElementById("signupManagerPw")
+        .value;
+
+
+    if(!name || !id || !pw){
+
+        showToast(
+            "이름, 아이디, 비밀번호를 모두 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(id.length < 3){
+
+        showToast(
+            "아이디는 3자 이상 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(pw.length < 4){
+
+        showToast(
+            "비밀번호는 4자 이상 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(!grade || !classNumber){
+
+        showToast(
+            "학년과 반을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        (role === "student" || role === "council") &&
+        !number
+    ){
+
+        showToast(
+            "학생과 학생회는 번호를 입력해야 합니다."
+        );
+
+        return;
+
+    }
+
+
+    /*
+    선생님과 학생회 계정은 관리자 비밀번호가 있어야 만들어집니다.
+    */
+
+    if(role !== "student"){
+
+        if(managerInput !== MANAGER_PASSWORD){
+
+            showToast(
+                "관리자 비밀번호가 맞지 않아 계정을 만들 수 없습니다."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    const duplicate =
+        users.some(function(user){
+
+            const sameRole =
+                user.role === role;
+
+            const sameId =
+                user.id === id;
+
+            const sameGrade =
+                String(user.grade) === String(grade);
+
+            const sameClass =
+                String(user.classNumber) === String(classNumber);
+
+            const sameNumber =
+                role === "teacher"
+                    ? true
+                    : String(user.studentNumber) === String(number);
+
+
+            return(
+                sameRole &&
+                sameId &&
+                sameGrade &&
+                sameClass &&
+                sameNumber
+            );
+
+        });
+
+
+    if(duplicate){
+
+        showToast(
+            "같은 ID와 같은 소속 정보를 가진 계정이 이미 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const salt =
+        makeSalt();
+
+    const pwHash =
+        await hashPassword(pw,salt);
+
+
+    users.push({
+
+        name:name,
+
+        id:id,
+
+        salt:salt,
+
+        pwHash:pwHash,
+
+        role:role,
+
+        grade:grade,
+
+        classNumber:classNumber,
+
+        studentNumber:
+            role === "teacher"
+                ? ""
+                : String(number)
+
+    });
+
+
+    saveAll();
+
+
+    document.getElementById("signupName").value="";
+    document.getElementById("signupId").value="";
+    document.getElementById("signupPw").value="";
+    document.getElementById("signupGrade").value="";
+    document.getElementById("signupClass").value="";
+    document.getElementById("signupNumber").value="";
+    document.getElementById("signupManagerPw").value="";
+
+
+    showToast(
+        "회원가입 완료!\n로그인 화면으로 이동합니다."
+    );
+
+
+    showPage("loginPage");
+
+}
+
+
+/* =====================================================
+비밀번호 확인
+
+v3에서 넘어온 계정은 평문 pw를 가지고 있습니다.
+확인에 성공하면 그 자리에서 해시로 바꿉니다.
+===================================================== */
+
+async function checkPassword(user,password){
+
+    if(user.pwHash && user.salt){
+
+        const hash =
+            await hashPassword(password,user.salt);
+
+
+        return hash === user.pwHash;
+
+    }
+
+
+    if(typeof user.pw === "string"){
+
+        if(user.pw !== password){
+
+            return false;
+
+        }
+
+
+        user.salt =
+            makeSalt();
+
+        user.pwHash =
+            await hashPassword(password,user.salt);
+
+        delete user.pw;
+
+
+        saveAll();
+
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+로그인
+===================================================== */
+
+async function login(){
+
+    const id =
+        document.getElementById("loginId")
+        .value.trim();
+
+    const pw =
+        document.getElementById("loginPw")
+        .value;
+
+    const role =
+        document.getElementById("loginRole")
+        .value;
+
+    const grade =
+        document.getElementById("loginGrade")
+        .value;
+
+    const classNumber =
+        document.getElementById("loginClass")
+        .value;
+
+    const number =
+        document.getElementById("loginNumber")
+        .value;
+
+    const manager =
+        document.getElementById("managerPw")
+        .value;
+
+
+    if(
+        !id ||
+        !pw ||
+        !grade ||
+        !classNumber
+    ){
+
+        showToast(
+            "아이디, 비밀번호, 학년, 반을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        (role === "student" || role === "council") &&
+        !number
+    ){
+
+        showToast(
+            "학생과 학생회는 번호를 입력해야 합니다."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        role === "teacher" ||
+        role === "council"
+    ){
+
+        if(manager !== MANAGER_PASSWORD){
+
+            showToast(
+                "관리자 비밀번호가 맞지 않습니다."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    const candidates =
+        users.filter(function(u){
+
+            const basic =
+                u.id === id &&
+                u.role === role &&
+                String(u.grade) === String(grade) &&
+                String(u.classNumber) === String(classNumber);
+
+
+            if(!basic){
+
+                return false;
+
+            }
+
+
+            if(role === "teacher"){
+
+                return true;
+
+            }
+
+
+            return(
+                String(u.studentNumber) === String(number)
+            );
+
+        });
+
+
+    let user = null;
+
+
+    for(const candidate of candidates){
+
+        const ok =
+            await checkPassword(candidate,pw);
+
+
+        if(ok){
+
+            user = candidate;
+
+            break;
+
+        }
+
+    }
+
+
+    if(!user){
+
+        showToast(
+            "입력한 정보와 일치하는 계정을 찾을 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    currentUser = user;
+
+    scheduleViewKey =
+        createClassKey(
+            user.grade,
+            user.classNumber
+        );
+
+    document.getElementById("loginPw").value="";
+    document.getElementById("managerPw").value="";
+
+    showDashboard();
+
+    showToast(
+        user.name + "님 로그인되었습니다."
+    );
+
+}
+
+
+/* =====================================================
+역할 이름
+===================================================== */
+
+function getRoleName(role){
+
+    if(role === "teacher"){
+
+        return "선생님";
+
+    }
+
+    if(role === "council"){
+
+        return "학생회";
+
+    }
+
+    return "학생";
+
+}
+
+
+/* =====================================================
+권한
+===================================================== */
+
+function isTeacher(){
+
+    return(
+        currentUser &&
+        currentUser.role === "teacher"
+    );
+
+}
+
+
+function isCouncil(){
+
+    return(
+        currentUser &&
+        currentUser.role === "council"
+    );
+
+}
+
+
+function canManageSchoolContent(){
+
+    return(
+        currentUser &&
+        (
+            currentUser.role === "teacher" ||
+            currentUser.role === "council"
+        )
+    );
+
+}
+
+
+/* =====================================================
+대시보드
+===================================================== */
+
+function showDashboard(){
+
+    if(!currentUser){
+
+        showPage("loginPage");
+
+        return;
+
+    }
+
+
+    const roleName =
+        getRoleName(currentUser.role);
+
+
+    let locationText =
+        currentUser.grade +
+        "학년 " +
+        currentUser.classNumber +
+        "반";
+
+
+    if(currentUser.role !== "teacher"){
+
+        locationText +=
+            " " +
+            currentUser.studentNumber +
+            "번";
+
+    }
+
+
+    document.getElementById(
+        "welcomeText"
+    ).textContent =
+        "👋 " +
+        currentUser.name +
+        "님 환영합니다! · " +
+        roleName +
+        " · " +
+        locationText;
+
+
+    const extra =
+        document.getElementById("extraMenu");
+
+
+    if(extra){
+
+        extra.classList.add("hidden");
+
+    }
+
+
+    loadProfile();
+    loadChat();
+    loadNotices();
+    loadVotes();
+    loadEvents();
+    loadMeal();
+    loadSchedules();
+    loadRooms();
+
+
+    showPage("dashboardPage");
+
+}
+
+
+/* =====================================================
+기능 열기
+===================================================== */
+
+function openPage(id){
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        showPage("loginPage");
+
+        return;
+
+    }
+
+
+    if(id === "chatPage"){
+
+        loadChat();
+
+    }
+
+
+    if(id === "roomListPage"){
+
+        loadRooms();
+
+    }
+
+
+    if(id === "noticePage"){
+
+        loadNotices();
+
+    }
+
+
+    if(id === "votePage"){
+
+        loadVotes();
+
+    }
+
+
+    if(id === "eventPage"){
+
+        loadEvents();
+
+    }
+
+
+    if(id === "mealPage"){
+
+        loadMeal();
+
+    }
+
+
+    if(id === "schedulePage"){
+
+        loadSchedules();
+
+    }
+
+
+    if(id === "inquiryPage"){
+
+        loadInquiries();
+
+    }
+
+
+    if(id === "profilePage"){
+
+        loadProfile();
+
+    }
+
+
+    showPage(id);
+
+}
+
+
+function toggleExtraMenu(){
+
+    const box =
+        document.getElementById("extraMenu");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    box.classList.toggle("hidden");
+
+}
+
+
+function backDashboard(){
+
+    showDashboard();
+
+}
+
+
+/* =====================================================
+로그아웃
+===================================================== */
+
+function logout(){
+
+    currentUser=null;
+
+    currentRoomId=null;
+
+    scheduleViewKey=null;
+
+
+    document.getElementById("loginId").value="";
+    document.getElementById("loginPw").value="";
+    document.getElementById("loginNumber").value="";
+    document.getElementById("managerPw").value="";
+
+
+    showPage("loginPage");
+
+
+    showToast(
+        "로그아웃되었습니다."
+    );
+
+}
+
+
+/* =====================================================
+프로필
+===================================================== */
+
+function loadProfile(){
+
+    const box =
+        document.getElementById("profileData");
+
+    const resetArea =
+        document.getElementById("resetArea");
+
+
+    if(!box || !currentUser){
+
+        return;
+
+    }
+
+
+    /*
+    전체 초기화는 관리자(선생님, 학생회)에게만 보입니다.
+    */
+
+    if(canManageSchoolContent()){
+
+        resetArea.classList.remove("hidden");
+
+
+        const hint =
+            document.getElementById("resetPwHint");
+
+
+        if(hint){
+
+            hint.textContent =
+                "초기화 전용 비밀번호: " + RESET_PASSWORD;
+
+        }
+
+
+    }else{
+
+        resetArea.classList.add("hidden");
+
+
+        const hint =
+            document.getElementById("resetPwHint");
+
+
+        if(hint){
+
+            hint.textContent="";
+
+        }
+
+
+        const resetInput =
+            document.getElementById("resetPw");
+
+
+        if(resetInput){
+
+            resetInput.value="";
+
+        }
+
+    }
+
+
+    const roleName =
+        getRoleName(currentUser.role);
+
+
+    const roleClass =
+        currentUser.role === "teacher"
+            ? "role-teacher"
+            : currentUser.role === "council"
+                ? "role-council"
+                : "role-student";
+
+
+    let numberHTML="";
+
+
+    if(currentUser.role !== "teacher"){
+
+        numberHTML=`
+
+        <div class="item">
+
+        <b>🔢 번호</b>
+
+        <br><br>
+
+        ${escapeHTML(currentUser.studentNumber)}번
+
+        </div>
+
+        `;
+
+    }
+
+
+    box.innerHTML=`
+
+    <div class="item">
+
+    <b>👤 이름</b>
+
+    <br><br>
+
+    ${escapeHTML(currentUser.name)}
+
+    </div>
+
+    <div class="item">
+
+    <b>🆔 아이디</b>
+
+    <br><br>
+
+    ${escapeHTML(currentUser.id)}
+
+    </div>
+
+    <div class="item">
+
+    <b>🔐 권한</b>
+
+    <br><br>
+
+    <span class="badge ${roleClass}">
+    ${roleName}
+    </span>
+
+    </div>
+
+    <div class="item">
+
+    <b>🎓 학년</b>
+
+    <br><br>
+
+    ${escapeHTML(currentUser.grade)}학년
+
+    </div>
+
+    <div class="item">
+
+    <b>🏫 반</b>
+
+    <br><br>
+
+    ${escapeHTML(currentUser.classNumber)}반
+
+    </div>
+
+    ${numberHTML}
+
+    <div class="item">
+
+    <b>🆔 사용자 식별번호</b>
+
+    <br><br>
+
+    ${escapeHTML(getUserIdentity())}
+
+    </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+계정 삭제
+===================================================== */
+
+function deleteAccount(){
+
+    if(!currentUser){
+
+        showPage("loginPage");
+
+        return;
+
+    }
+
+
+    const check =
+        confirm(
+            "정말 계정을 삭제할까요?\n\n" +
+            "회원 정보는 삭제되지만 기존 게시글과 채팅은 유지됩니다."
+        );
+
+
+    if(!check){
+
+        return;
+
+    }
+
+
+    const id =
+        currentUser.id;
+
+    const role =
+        currentUser.role;
+
+    const grade =
+        currentUser.grade;
+
+    const classNumber =
+        currentUser.classNumber;
+
+    const number =
+        currentUser.studentNumber;
+
+
+    users =
+        users.filter(function(user){
+
+            if(
+                user.id !== id ||
+                user.role !== role ||
+                String(user.grade) !== String(grade) ||
+                String(user.classNumber) !== String(classNumber)
+            ){
+
+                return true;
+
+            }
+
+
+            if(role === "teacher"){
+
+                return false;
+
+            }
+
+
+            return(
+                String(user.studentNumber) !==
+                String(number)
+            );
+
+        });
+
+
+    saveAll();
+
+
+    currentUser=null;
+
+    currentRoomId=null;
+
+    scheduleViewKey=null;
+
+
+    document.getElementById("loginId").value="";
+    document.getElementById("loginPw").value="";
+    document.getElementById("loginNumber").value="";
+    document.getElementById("managerPw").value="";
+
+
+    showToast(
+        "계정이 삭제되었습니다."
+    );
+
+    showPage("signupPage");
+
+}
+
+
+/* =====================================================
+표현 필터
+
+두 단계로 나눕니다.
+
+1) strictWords
+   맥락과 상관없이 욕설인 표현.
+   공백, 특수문자, 숫자를 끼워 넣는 우회도 잡습니다.
+
+2) contextWords
+   일상어와 겹쳐서 오탐이 잘 나는 표현.
+   앞뒤 글자를 보고 정상적인 쓰임이면 통과시킵니다.
+
+allowPhrases
+   먼저 걸러내는 정상 단어입니다.
+   예: 고추장, 새끼손가락, 완전변태
+
+성적 지향을 가리키는 단어(게이, 레즈비언 등)는
+욕설이 아니라 정체성 용어이므로 목록에서 제외했습니다.
+비하는 단어 자체가 아니라 문장 전체의 태도에서 나오므로,
+필요하면 신고 기능으로 다루는 편이 맞습니다.
+===================================================== */
+
+const allowPhrases = [
+
+    /* 음식·사물 */
+
+    "고추장","고춧가루","고추가루","풋고추","청양고추","홍고추",
+    "고추밭","고추냉이","걸레질","걸레받이",
+
+    /* 신체·동물 */
+
+    "새끼손가락","새끼발가락","새끼손톱","새끼발톱",
+    "새끼고양이","새끼강아지","새끼오리","새끼호랑이",
+    "고양이 새끼","강아지 새끼","불알친구",
+
+    /* 학습 용어 */
+
+    "완전변태","불완전변태","호모 사피엔스","호모사피엔스",
+    "호모 에렉투스","호모에렉투스","장애자","애자일",
+    "애니미즘","고자질"
+
+];
+
+
+/* -----------------------------------------------------
+1단계 확실한 욕설
+
+우회 표현까지 잡습니다.
+공백이나 숫자를 끼워 넣어도 걸립니다.
+----------------------------------------------------- */
+
+const strictWords = [
+
+    "씨발","시발","씨팔","시팔","씨빨","시빨",
+    "씨발놈","씨발년","씨발새끼","씨방새","씨부랄","씨댕",
+    "씹할","니미씨발","ㅆㅂ","ㅅㅂ",
+    "쌰갈","쌰발","쌰빨","싀발","싀팔",
+
+    "개새끼","개색기","개자식","개놈","개년","개돼지",
+    "개쓰레기","개지랄","개소리","개씹","개좆","개차반",
+
+    "병신","븅신","븅딱","등신","지랄","존나","졸라",
+    "좆","좆까","좆밥","좆같","좆물","좆심","좆집",
+
+    "미친놈","미친년","미친새끼","미친개","또라이",
+    "닥쳐","꺼져","뒈져","뒈질","뒤질래",
+    "아가리","주둥아리","찐따",
+
+    "니애미","니애비","니엄마","니아빠","니미",
+    "느금마","느개비","너검엄빠","엠창","엄창","애미뒤",
+
+    "애새끼","돼지새끼","돼지년","돼지놈",
+    "장애인새끼","정신병자새끼","인간쓰레기","벌레새끼","쥐새끼",
+
+    "씹년","씹새","씹새끼","씹창","씹덕","씹지랄","씹쓰레기",
+    "씹구멍","씹치남","창녀","창남","창년","창놈","갈보","매춘부",
+
+    "fuck","fucking","shit","bitch","asshole","faggot","fag","nigger"
+
+];
+
+
+/* -----------------------------------------------------
+2단계 일반 금지어
+
+원문에 그대로 있을 때만 걸립니다.
+공백을 지우고 검사하지 않으므로
+"시간 나?"가 "간나"로 잘못 잡히는 일이 없습니다.
+----------------------------------------------------- */
+
+const exactWords = [
+
+    /* ㄱ */
+    "간나","간나새끼","개간나","쌍간나","종간나","좆간나",
+    "거지새끼","거렁뱅이","그지깽깽이","경을 칠","귓것",
+    "고자새끼","광년이","깜둥이","꼬라보","꼬라봐","깝치","깝쳐",
+    "꺼벙이","꼬붕","꼰대","꼴불견","꼴통","끈끈아",
+    "급식충","김치녀","개판이","개똥","똥개",
+
+    /* ㄴ */
+    "남창","냄져","네 다음","ㄴㄷㅆ","연놈","논다니","뇌절",
+    "눈 깔아","니미럴","니미뽕","니기미","나가 죽어","나가 뒈져","노괴",
+
+    /* ㄷ */
+    "당나귀 사촌","닭대가리","새대가리","돌대가리","빡대가리",
+    "덜떨어","두루애","두창","똥꼬충","똘마니","똘추","똘게이",
+    "따까리","딸딸이 부대","땅딸보","땡중","땡추","떨거지",
+    "띨빵","띨띨이","띨빡","되놈",
+
+    /* ㄹ */
+    "렉카충","로리콘","루저","기레기",
+
+    /* ㅁ */
+    "멍청이","멍청도","말하는 가축","망나니","맘충","머저리","모지리",
+    "먹사","메갈리아","무뇌","무뇌충","무뇌아","미친놈","미친년",
+    "몽근놈","멧돼지새끼",
+
+    /* ㅂ */
+    "바보","반푼이","밴댕이 소갈","버러지","변태새끼",
+    "보슬아치","보추","보전깨","보빨러","빠구리","빠가",
+    "빡추","빨갱이","빨통","뻐큐","뻑큐","별창","빌어먹을",
+    "부모가 홀수","불한당",
+
+    /* ㅅ */
+    "사이코","상판대기","상판때기","상폐녀","새쓰개","석녀",
+    "설명충","쇼타콘","수전노","쌍놈","쌍년","쌍욕","썅",
+    "십장생 같","씨부랄","삼엽충 같",
+
+    /* ㅇ */
+    "아다 떼","애비충","애자","앱등이","야리네","양공주","양놈",
+    "어저미","언년이","얼간이","여편네","염병","옘병","옌장",
+    "오유충","왜놈","우라질","오라질","운지","워마드",
+    "유아틱","유아퇴행","육갑","육변기","육시랄","이완용 같",
+    "인마","임마","일베충","일베 하","엿먹",
+
+    /* ㅈ */
+    "자슥","잡놈","잡년","장뚜룸","재기해","저능아","정박아",
+    "정신병자","제기랄","제길","젠장","좆도","좆만",
+    "좆대가리","좆빨러","주둥이 닥","쥐뿔","지기미","지끼미",
+    "짜져 있","째져 있","짱깨","짱꼴라","장궤","쩌리","쫄보",
+    "찌질이","찌랭이","찐찌버거","쪽발이","반쪽발이",
+
+    /* ㅊ */
+    "천치","처먹","쳐먹","촛불좀비","좌좀","우좀","추남","추녀",
+    "철면피 같","한남충","한녀충","한남 새","맘충",
+
+    /* ㅋㅌㅍㅎ */
+    "코쟁이","코흘리개","외퀴","토착왜구","토착짱깨","토착빨갱이",
+    "통구이 드립","홍어 드립","틀딱","틀니딱딱",
+    "파쇼","폐급","폐녀자","피싸개",
+    "허세충","호랑말코","호로자식","호로새끼","후레자식",
+    "화냥년","후빨","후장빨개","흑돼지 같","열폭","페도"
+
+];
+
+
+/* -----------------------------------------------------
+3단계 맥락을 보는 금지어
+
+일상어와 형태가 같아서
+앞뒤를 확인한 뒤에 판단합니다.
+----------------------------------------------------- */
+
+const contextWords = [
+
+    {
+        word:"보지",
+        allowBefore:/[가-힣]$/,
+        allowAfter:/^\s*(마|말|못|않|는|도|만|요)/
+    },
+
+    {
+        word:"자지",
+        allowBefore:/[가-힣]$/,
+        allowAfter:/^\s*(마|말|않|는|도|만|요)/
+    },
+
+    {
+        word:"씹",
+        allowBefore:/[가-힣]$/,
+        allowAfter:/^(어|었|아|았|는|다|더|고|지|자|을|를|힌|히|혀|혈|기|게|도록|으면|면)/
+    },
+
+    {
+        word:"고추",
+        allowBefore:/(홍|풋|청양|말린)$/,
+        allowAfter:/^(장|가루|밭|농사|를 심|를 따|를 말)/
+    },
+
+    {
+        word:"변태",
+        allowBefore:/(완전|불완전|곤충의|의)\s*$/,
+        allowAfter:/^\s*(과정|를 거|한다|하는)/
+    },
+
+    {
+        word:"불알",
+        allowBefore:null,
+        allowAfter:/^친구/
+    },
+
+    {
+        word:"걸레",
+        allowBefore:/(마른|젖은|물)$/,
+        allowAfter:/^(질|받이|로 닦|를 빨|를 짜)/
+    },
+
+    {
+        /* 강아지 새끼처럼 동물의 새끼는 통과 */
+        word:"새끼",
+        allowBefore:/(강아지|고양이|호랑이|사자|곰|오리|돼지|소|말|새|짐승|동물)\s*$/,
+        allowAfter:/^(손|발|를 낳|가 태어|를 돌|를 키)/
+    },
+
+    {
+        /* 호모 사피엔스는 통과 */
+        word:"호모",
+        allowBefore:null,
+        allowAfter:/^\s*(사피|에렉|하빌|속|이데|그래)/
+    },
+
+    {
+        /* 고자질은 통과 */
+        word:"고자",
+        allowBefore:null,
+        allowAfter:/^(질|잘)/
+    },
+
+    {
+        /* 잡종 강세 등 생물 용어는 통과 */
+        word:"잡종",
+        allowBefore:/(생물|식물|동물)\s*$/,
+        allowAfter:/^(강세|교배|번식|형성)/
+    },
+
+    {
+        /* 게이머, 게이트, 게이지는 통과 */
+        word:"게이",
+        allowBefore:/(하게|렇게|같게|많게|작게)$/,
+        allowAfter:/^(머|트|지|샤|밍)/
+    },
+
+    {
+        /* 물고기 대가리처럼 동물을 가리키면 통과 */
+        word:"대가리",
+        allowBefore:/(물고기|생선|닭|소|돼지|새|뱀|멸치|고등어|갈치)\s*$/,
+        allowAfter:null
+    },
+
+    {
+        /* 오리는 통과, 사람을 가리키면 차단 */
+        word:"쪼다",
+        allowBefore:/(새가|닭이|부리로|모이를)\s*$/,
+        allowAfter:null
+    }
+
+];
+
+
+/* =====================================================
+정규식 안전 처리
+===================================================== */
+
+function escapeRegExp(text){
+
+    return String(text).replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&"
+    );
+
+}
+
+
+/* =====================================================
+허용 표현 제거
+
+정상 단어를 먼저 지운 뒤에 검사하므로
+고추장, 새끼손가락 같은 말이 걸리지 않습니다.
+===================================================== */
+
+function removeAllowPhrases(text){
+
+    let result =
+        String(text);
+
+
+    allowPhrases.forEach(function(phrase){
+
+        const pattern =
+            new RegExp(
+                escapeRegExp(phrase),
+                "gi"
+            );
+
+
+        result =
+            result.replace(
+                pattern,
+                " ".repeat(phrase.length)
+            );
+
+    });
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+정규화
+===================================================== */
+
+function normalizeChatText(text){
+
+    return String(text)
+        .toLowerCase()
+        .replace(/\s+/g,"")
+        .replace(
+            /[.,\/#!$%^&*;:{}=\-_`~()?'"[\]\\|<>@+]/g,
+            ""
+        );
+
+}
+
+
+function normalizeRepeatedCharacters(text){
+
+    return String(text)
+        .replace(/(.)\1{2,}/g,"$1$1");
+
+}
+
+
+function normalizeLeetText(text){
+
+    return String(text)
+        .toLowerCase()
+        .replace(/1/g,"i")
+        .replace(/!/g,"i")
+        .replace(/0/g,"o")
+        .replace(/3/g,"e")
+        .replace(/4/g,"a")
+        .replace(/5/g,"s")
+        .replace(/7/g,"t")
+        .replace(/@/g,"a")
+        .replace(/\$/g,"s");
+
+}
+
+
+/* =====================================================
+자모 조립
+
+"ㅅ ㅣ 발", "ㅆㅣ발", "ㅅㅣㅂㅏㄹ" 처럼
+낱자로 풀어 쓴 우회 표현을 다시 글자로 합칩니다.
+
+"ㅅ이발" 처럼 자음 뒤에 ㅇ으로 시작하는 글자가 오면
+그 글자의 첫소리를 앞의 자음으로 바꿉니다.
+
+ㅋㅋ, ㅎㅇ, ㅠㅠ 같은 평범한 표현은
+모음이나 조합 조건이 맞지 않아 그대로 남습니다.
+===================================================== */
+
+const CHO = [
+    "ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ",
+    "ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"
+];
+
+const JUNG = [
+    "ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ",
+    "ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"
+];
+
+const JONG = [
+    "","ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ",
+    "ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ",
+    "ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"
+];
+
+
+function isSyllable(char){
+
+    const code =
+        char.charCodeAt(0);
+
+
+    return code >= 0xAC00 && code <= 0xD7A3;
+
+}
+
+
+function assembleJamo(text){
+
+    const source =
+        String(text);
+
+
+    let result = "";
+
+    let i = 0;
+
+
+    while(i < source.length){
+
+        const current =
+            source[i];
+
+        const next =
+            source[i+1];
+
+
+        const choIndex =
+            CHO.indexOf(current);
+
+
+        /*
+        자음 + 모음 형태
+        */
+
+        if(
+            choIndex !== -1 &&
+            next &&
+            JUNG.indexOf(next) !== -1
+        ){
+
+            const jungIndex =
+                JUNG.indexOf(next);
+
+            let jongIndex = 0;
+
+            let used = 2;
+
+
+            const third =
+                source[i+2];
+
+            const fourth =
+                source[i+3];
+
+
+            /*
+            받침으로 볼 수 있는지 확인합니다.
+            뒤에 모음이 이어지면 다음 글자의 첫소리이므로
+            받침으로 가져오지 않습니다.
+            */
+
+            if(
+                third &&
+                JONG.indexOf(third) > 0 &&
+                !(fourth && JUNG.indexOf(fourth) !== -1)
+            ){
+
+                jongIndex =
+                    JONG.indexOf(third);
+
+                used = 3;
+
+            }
+
+
+            result +=
+                String.fromCharCode(
+                    0xAC00 +
+                    (choIndex * 21 + jungIndex) * 28 +
+                    jongIndex
+                );
+
+
+            i += used;
+
+            continue;
+
+        }
+
+
+        /*
+        자음 + ㅇ으로 시작하는 글자
+        예: ㅅ + 이 -> 시
+        */
+
+        if(
+            choIndex !== -1 &&
+            next &&
+            isSyllable(next)
+        ){
+
+            const code =
+                next.charCodeAt(0) - 0xAC00;
+
+
+            if(Math.floor(code / 588) === 11){
+
+                result +=
+                    String.fromCharCode(
+                        0xAC00 +
+                        choIndex * 588 +
+                        (code % 588)
+                    );
+
+
+                i += 2;
+
+                continue;
+
+            }
+
+        }
+
+
+        result += current;
+
+        i += 1;
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+자모 우회용 정규화
+
+숫자 1, 영문 l, 세로 막대는 모음 ㅣ로 봅니다.
+"ㅅ1발" 같은 표현을 잡기 위한 것입니다.
+===================================================== */
+
+function jamoVariant(text){
+
+    const replaced =
+        String(text)
+        .replace(/[1lI|!]/g,"ㅣ");
+
+
+    return normalizeRepeatedCharacters(
+        assembleJamo(
+            normalizeChatText(replaced)
+        )
+    );
+
+}
+
+
+/* =====================================================
+확실한 욕설 검사
+
+우회 탐지의 간격을 2글자로 제한합니다.
+원본 코드처럼 제한이 없으면
+문장 전체가 하나의 욕설로 잘못 인식됩니다.
+===================================================== */
+
+function findStrictWord(text){
+
+    const original =
+        String(text).toLowerCase();
+
+
+    let normalized =
+        normalizeRepeatedCharacters(
+            normalizeChatText(original)
+        );
+
+
+    let leet =
+        normalizeRepeatedCharacters(
+            normalizeChatText(
+                normalizeLeetText(original)
+            )
+        );
+
+
+    /*
+    낱자로 풀어 쓴 우회 표현을 합친 형태
+    */
+
+    const assembled =
+        jamoVariant(original);
+
+
+    for(const word of strictWords){
+
+        const target =
+            normalizeChatText(word);
+
+
+        if(!target){
+
+            continue;
+
+        }
+
+
+        if(
+            normalized.includes(target) ||
+            leet.includes(target) ||
+            assembled.includes(target)
+        ){
+
+            return word;
+
+        }
+
+
+        const chars =
+            [...target];
+
+
+        if(chars.length < 2){
+
+            continue;
+
+        }
+
+
+        const pattern =
+            chars
+            .map(function(char){
+
+                return escapeRegExp(char);
+
+            })
+            .join("[^가-힣a-zA-Z]{0,2}");
+
+
+        try{
+
+            if(
+                new RegExp(pattern,"i")
+                .test(original)
+            ){
+
+                return word;
+
+            }
+
+        }catch(error){
+
+            console.error(error);
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+맥락을 보는 검사
+===================================================== */
+
+function findContextWord(text){
+
+    const source =
+        String(text);
+
+
+    for(const rule of contextWords){
+
+        let index =
+            source.indexOf(rule.word);
+
+
+        while(index !== -1){
+
+            const before =
+                source.slice(0,index);
+
+            const after =
+                source.slice(
+                    index + rule.word.length
+                );
+
+
+            const allowedByBefore =
+                rule.allowBefore
+                    ? rule.allowBefore.test(before)
+                    : false;
+
+            const allowedByAfter =
+                rule.allowAfter
+                    ? rule.allowAfter.test(after)
+                    : false;
+
+
+            if(
+                !allowedByBefore &&
+                !allowedByAfter
+            ){
+
+                return rule.word;
+
+            }
+
+
+            index =
+                source.indexOf(
+                    rule.word,
+                    index + 1
+                );
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+최종 검사
+===================================================== */
+
+function findExactWord(text){
+
+    const source =
+        String(text).toLowerCase();
+
+
+    for(const word of exactWords){
+
+        if(source.includes(word.toLowerCase())){
+
+            return word;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+function findBannedWord(text){
+
+    const cleaned =
+        removeAllowPhrases(text);
+
+
+    const strict =
+        findStrictWord(cleaned);
+
+
+    if(strict){
+
+        return strict;
+
+    }
+
+
+    const exact =
+        findExactWord(cleaned);
+
+
+    if(exact){
+
+        return exact;
+
+    }
+
+
+    return findContextWord(cleaned);
+
+}
+
+
+/* =====================================================
+전체 채팅 전송
+===================================================== */
+
+function sendChat(){
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("chatInput");
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        /*
+        입력한 내용을 지우지 않습니다.
+        고쳐 쓸 수 있게 그대로 둡니다.
+        */
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다.\n" +
+            "표현을 고쳐서 다시 보내주세요."
+        );
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    chats.push({
+
+        userKey:
+            createUserKey(currentUser),
+
+        name:
+            currentUser.name,
+
+        role:
+            currentUser.role,
+
+        text:
+            text,
+
+        time:
+            new Date().toLocaleString()
+
+    });
+
+
+    if(chats.length > 300){
+
+        chats =
+            chats.slice(-300);
+
+    }
+
+
+    storageSet(
+        STORAGE.chats,
+        JSON.stringify(chats)
+    );
+
+
+    input.value="";
+
+    loadChat();
+
+}
+
+
+function chatEnter(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendChat();
+
+    }
+
+}
+
+
+/* =====================================================
+전체 채팅 불러오기
+===================================================== */
+
+function loadChat(){
+
+    const box =
+        document.getElementById("chatMessages");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    box.innerHTML="";
+
+
+    if(chats.length === 0){
+
+        box.innerHTML=
+            `<div class="empty">
+            아직 전체 채팅이 없습니다.
+            </div>`;
+
+        return;
+
+    }
+
+
+    chats.forEach(function(chat){
+
+        const roleName =
+            getRoleName(chat.role);
+
+
+        box.innerHTML += `
+
+        <div class="chat">
+
+        <div class="chatName">
+
+        ${escapeHTML(chat.name)}
+        · ${escapeHTML(roleName)}
+
+        </div>
+
+        <div style="margin-top:5px;">
+
+        ${escapeHTML(chat.text)}
+
+        </div>
+
+        <div class="chatTime">
+
+        ${escapeHTML(chat.time)}
+
+        </div>
+
+        </div>
+
+        `;
+
+    });
+
+
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* =====================================================
+문의사항
+
+전체 채팅과 같은 구조입니다.
+누가 남겼는지 이름과 역할이 함께 남습니다.
+===================================================== */
+
+function sendInquiry(){
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("inquiryInput");
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다.\n" +
+            "표현을 고쳐서 다시 보내주세요."
+        );
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    inquiries.push({
+
+        userKey:createUserKey(currentUser),
+
+        name:currentUser.name,
+
+        role:currentUser.role,
+
+        text:text,
+
+        time:new Date().toLocaleString()
+
+    });
+
+
+    if(inquiries.length > 300){
+
+        inquiries = inquiries.slice(-300);
+
+    }
+
+
+    storageSet(
+        STORAGE.inquiries,
+        JSON.stringify(inquiries)
+    );
+
+
+    input.value="";
+
+    loadInquiries();
+
+    showToast("문의사항이 등록되었습니다.");
+
+}
+
+
+function inquiryEnter(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendInquiry();
+
+    }
+
+}
+
+
+function loadInquiries(){
+
+    const box =
+        document.getElementById("inquiryMessages");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    box.innerHTML="";
+
+
+    if(inquiries.length === 0){
+
+        box.innerHTML=`
+        <div class="empty">
+        아직 등록된 문의사항이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    inquiries.forEach(function(item){
+
+        box.innerHTML += `
+
+        <div class="chat">
+
+        <div class="chatName">
+        ${escapeHTML(item.name)}
+        · ${escapeHTML(getRoleName(item.role))}
+        </div>
+
+        <div style="margin-top:5px;">
+        ${escapeHTML(item.text)}
+        </div>
+
+        <div class="chatTime">
+        ${escapeHTML(item.time)}
+        </div>
+
+        </div>
+
+        `;
+
+    });
+
+
+    box.scrollTop = box.scrollHeight;
+
+}
+
+
+/* =====================================================
+베타 안내창
+
+끝까지 읽어야 확인 버튼이 열립니다.
+글을 아래까지 내렸는지 확인하고,
+최소 5초가 지나야 누를 수 있습니다.
+
+한 번 확인하면 같은 빌드에서는 다시 뜨지 않습니다.
+===================================================== */
+
+let betaScrolled = false;
+
+let betaWaited = false;
+
+let betaLeft = 5;
+
+
+function updateBetaButton(){
+
+    const button =
+        document.getElementById("betaButton");
+
+
+    if(!button){
+
+        return;
+
+    }
+
+
+    if(!betaScrolled){
+
+        button.disabled = true;
+
+        button.textContent =
+            "끝까지 읽어주세요";
+
+        return;
+
+    }
+
+
+    if(!betaWaited){
+
+        button.disabled = true;
+
+        button.textContent =
+            betaLeft + "초 후에 누를 수 있습니다";
+
+        return;
+
+    }
+
+
+    button.disabled = false;
+
+    button.textContent =
+        "확인했습니다";
+
+}
+
+
+function initBetaNotice(){
+
+    const overlay =
+        document.getElementById("betaOverlay");
+
+    const text =
+        document.getElementById("betaText");
+
+
+    if(!overlay || !text){
+
+        return;
+
+    }
+
+
+    if(storageGet("schoolhub_beta_ack") === BUILD_ID){
+
+        return;
+
+    }
+
+
+    overlay.classList.add("show");
+
+
+    /*
+    스크롤이 생기지 않을 만큼 짧으면
+    읽은 것으로 봅니다.
+    */
+
+    if(text.scrollHeight - text.clientHeight <= 4){
+
+        betaScrolled = true;
+
+    }
+
+
+    text.addEventListener("scroll",function(){
+
+        if(
+            text.scrollTop + text.clientHeight >=
+            text.scrollHeight - 4
+        ){
+
+            betaScrolled = true;
+
+            updateBetaButton();
+
+        }
+
+    });
+
+
+    const timer =
+        setInterval(function(){
+
+            betaLeft--;
+
+
+            if(betaLeft <= 0){
+
+                betaWaited = true;
+
+                clearInterval(timer);
+
+            }
+
+
+            updateBetaButton();
+
+        },1000);
+
+
+    updateBetaButton();
+
+}
+
+
+function closeBetaNotice(){
+
+    if(!betaScrolled || !betaWaited){
+
+        return;
+
+    }
+
+
+    storageSet("schoolhub_beta_ack",BUILD_ID);
+
+
+    const overlay =
+        document.getElementById("betaOverlay");
+
+
+    if(overlay){
+
+        overlay.classList.remove("show");
+
+    }
+
+}
+
+
+/* =====================================================
+학년·반 키
+===================================================== */
+
+function createClassKey(grade,classNumber){
+
+    return(
+        String(grade) +
+        "-" +
+        String(classNumber)
+    );
+
+}
+
+
+function createRoomId(grade,classNumber){
+
+    return createClassKey(grade,classNumber);
+
+}
+
+
+/* =====================================================
+단체방 입장 권한
+===================================================== */
+
+function canEnterRoom(room){
+
+    if(!currentUser || !room){
+
+        return false;
+
+    }
+
+
+    if(currentUser.role === "teacher"){
+
+        return true;
+
+    }
+
+
+    return(
+        String(currentUser.grade) === String(room.grade) &&
+        String(currentUser.classNumber) === String(room.classNumber)
+    );
+
+}
+
+
+/* =====================================================
+단체방 생성
+===================================================== */
+
+function createRoom(){
+
+    if(!isTeacher()){
+
+        showToast(
+            "선생님만 단체방을 만들 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const grade =
+        document.getElementById("roomGrade")
+        .value;
+
+    const classNumber =
+        document.getElementById("roomClass")
+        .value;
+
+    const name =
+        document.getElementById("roomName")
+        .value.trim();
+
+
+    if(!grade || !classNumber){
+
+        showToast(
+            "학년과 반을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(!name){
+
+        showToast(
+            "단체방 이름을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    const roomId =
+        createRoomId(grade,classNumber);
+
+
+    const exists =
+        rooms.some(function(room){
+
+            return room.id === roomId;
+
+        });
+
+
+    if(exists){
+
+        showToast(
+            "해당 학년·반의 단체방이 이미 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    rooms.push({
+
+        id:roomId,
+
+        name:name,
+
+        grade:String(grade),
+
+        classNumber:String(classNumber),
+
+        createdBy:currentUser.name,
+
+        createdAt:new Date().toLocaleString()
+
+    });
+
+
+    if(!roomChats[roomId]){
+
+        roomChats[roomId]=[];
+
+    }
+
+
+    saveAll();
+
+
+    document.getElementById("roomGrade").value="";
+    document.getElementById("roomClass").value="";
+    document.getElementById("roomName").value="";
+
+
+    loadRooms();
+
+
+    showToast(
+        "단체방이 만들어졌습니다."
+    );
+
+}
+
+
+/* =====================================================
+단체방 목록
+===================================================== */
+
+function loadRooms(){
+
+    const list =
+        document.getElementById("roomList");
+
+    const createBox =
+        document.getElementById("teacherRoomCreateBox");
+
+    const permission =
+        document.getElementById("roomPermission");
+
+
+    if(!list){
+
+        return;
+
+    }
+
+
+    if(isTeacher()){
+
+        createBox.classList.remove("hidden");
+
+        permission.innerHTML="";
+
+    }else{
+
+        createBox.classList.add("hidden");
+
+        permission.innerHTML=`
+
+        <div class="notice">
+
+        👥 같은 학년·반 학생은 자신의 반 단체방에
+        자동으로 들어갈 수 있습니다.
+
+        </div>
+
+        `;
+
+    }
+
+
+    list.innerHTML="";
+
+
+    if(rooms.length === 0){
+
+        list.innerHTML=`
+
+        <div class="empty">
+
+        아직 만들어진 단체방이 없습니다.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let visibleCount=0;
+
+
+    rooms.forEach(function(room){
+
+        if(!canEnterRoom(room)){
+
+            return;
+
+        }
+
+
+        visibleCount++;
+
+
+        const buttonText =
+            isTeacher()
+                ? "👀 단체방 열기"
+                : "💬 우리 반 단체방 입장";
+
+
+        list.innerHTML += `
+
+        <div class="roomCard">
+
+        <h3>
+        👥 ${escapeHTML(room.name)}
+        </h3>
+
+        <p>
+        🎓 ${escapeHTML(room.grade)}학년
+        ${escapeHTML(room.classNumber)}반
+        </p>
+
+        <p class="info">
+        만든 사람:
+        ${escapeHTML(room.createdBy || "알 수 없음")}
+        </p>
+
+        <p class="info">
+        생성일:
+        ${escapeHTML(room.createdAt || "")}
+        </p>
+
+        <button
+        class="btn purple"
+        onclick="enterRoom('${escapeJS(room.id)}')"
+        >
+        ${buttonText}
+        </button>
+
+        </div>
+
+        `;
+
+    });
+
+
+    if(visibleCount === 0){
+
+        list.innerHTML=`
+
+        <div class="empty">
+
+        현재 입장할 수 있는 단체방이 없습니다.
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+단체방 입장
+===================================================== */
+
+function enterRoom(roomId){
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        return;
+
+    }
+
+
+    const room =
+        rooms.find(function(item){
+
+            return item.id === roomId;
+
+        });
+
+
+    if(!room){
+
+        showToast(
+            "존재하지 않는 단체방입니다."
+        );
+
+        return;
+
+    }
+
+
+    if(!canEnterRoom(room)){
+
+        showToast(
+            "자신의 학년·반 단체방만 입장할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    currentRoomId =
+        room.id;
+
+
+    openRoomPage("roomDashboardPage");
+
+}
+
+
+/* =====================================================
+반 전용 화면 열기
+
+모든 반 화면은 들어갈 때마다 권한을 다시 확인합니다.
+주소를 직접 건드려도 다른 반 화면은 열리지 않습니다.
+===================================================== */
+
+function openRoomPage(id){
+
+    const room =
+        rooms.find(function(item){
+
+            return item.id === currentRoomId;
+
+        });
+
+
+    if(!room || !canEnterRoom(room)){
+
+        showToast(
+            "이 단체방에 들어갈 수 없습니다."
+        );
+
+        showPage("roomListPage");
+
+        return;
+
+    }
+
+
+    if(id === "roomDashboardPage"){
+
+        loadRoomDashboard();
+
+    }
+
+
+    if(id === "roomChatPage"){
+
+        loadRoomChat();
+
+    }
+
+
+    if(id === "roomNoticePage"){
+
+        loadRoomNotices();
+
+    }
+
+
+    if(id === "roomVotePage"){
+
+        loadRoomVotes();
+
+    }
+
+
+    if(id === "roomEventPage"){
+
+        loadRoomEvents();
+
+    }
+
+
+    if(id === "roomSchedulePage"){
+
+        loadRoomSchedule();
+
+    }
+
+
+    showPage(id);
+
+}
+
+
+function leaveRoom(){
+
+    currentRoomId=null;
+
+    loadRooms();
+
+    showPage("roomListPage");
+
+}
+
+
+/* =====================================================
+반 안에서의 등록 권한
+
+반 단체방은 선생님만 관리합니다.
+학생회는 학교 게시판·투표·행사는 올릴 수 있지만,
+반 단체방 안에서는 일반 학생과 같습니다.
+읽고 채팅하고 투표할 수 있습니다.
+===================================================== */
+
+function canManageRoomContent(){
+
+    return isTeacher();
+
+}
+
+
+function currentRoom(){
+
+    return rooms.find(function(item){
+
+        return item.id === currentRoomId;
+
+    });
+
+}
+
+
+function roomWritePermission(boxId,noticeId,label){
+
+    const box =
+        document.getElementById(boxId);
+
+    const notice =
+        document.getElementById(noticeId);
+
+
+    if(!box || !notice){
+
+        return;
+
+    }
+
+
+    if(canManageRoomContent()){
+
+        box.classList.remove("hidden");
+
+        notice.innerHTML="";
+
+    }else{
+
+        box.classList.add("hidden");
+
+        notice.innerHTML=`
+
+        <div class="notice">
+
+        ${label} 등록은 선생님만 할 수 있습니다.
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+반 대시보드
+===================================================== */
+
+function loadRoomDashboard(){
+
+    const room =
+        currentRoom();
+
+    const header =
+        document.getElementById("roomDashHeader");
+
+    const permission =
+        document.getElementById("roomDashPermission");
+
+
+    if(!room || !header){
+
+        return;
+
+    }
+
+
+    header.innerHTML=`
+
+    <h1 style="margin-bottom:8px;">
+    👥 ${escapeHTML(room.name)}
+    </h1>
+
+    <p>
+    ${escapeHTML(room.grade)}학년
+    ${escapeHTML(room.classNumber)}반 전용 공간
+    </p>
+
+    `;
+
+
+    permission.innerHTML=`
+
+    <div class="notice">
+
+    여기에 올린 글, 투표, 행사는
+    ${escapeHTML(room.grade)}학년 ${escapeHTML(room.classNumber)}반과
+    선생님만 볼 수 있습니다.
+
+    </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+반 게시판
+===================================================== */
+
+function addRoomNotice(){
+
+    if(!canManageRoomContent()){
+
+        showToast(
+            "반 게시글은 선생님만 작성할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("roomNoticeInput");
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        showToast("내용을 입력하세요.");
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(roomNotices[currentRoomId])){
+
+        roomNotices[currentRoomId]=[];
+
+    }
+
+
+    roomNotices[currentRoomId].unshift({
+
+        text:text,
+
+        name:currentUser.name,
+
+        role:currentUser.role,
+
+        time:new Date().toLocaleString()
+
+    });
+
+
+    storageSet(
+        STORAGE.roomNotices,
+        JSON.stringify(roomNotices)
+    );
+
+
+    input.value="";
+
+    loadRoomNotices();
+
+    showToast("게시글이 등록되었습니다.");
+
+}
+
+
+function loadRoomNotices(){
+
+    roomWritePermission(
+        "roomNoticeWriterBox",
+        "roomNoticePermission",
+        "우리 반 게시글"
+    );
+
+
+    const box =
+        document.getElementById("roomNoticeList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    const list =
+        Array.isArray(roomNotices[currentRoomId])
+            ? roomNotices[currentRoomId]
+            : [];
+
+
+    box.innerHTML="";
+
+
+    if(list.length === 0){
+
+        box.innerHTML=`
+        <div class="empty">
+        우리 반 게시글이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    list.forEach(function(item){
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>📢 ${escapeHTML(item.text)}</h3>
+
+        <p>
+        작성자:
+        ${escapeHTML(item.name)}
+        ·
+        ${escapeHTML(getRoleName(item.role))}
+        </p>
+
+        <p class="info">${escapeHTML(item.time)}</p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+반 투표
+===================================================== */
+
+function createRoomVote(){
+
+    if(!canManageRoomContent()){
+
+        showToast(
+            "반 투표는 선생님만 만들 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        document.getElementById("roomVoteTitle").value.trim();
+
+    const o1 =
+        document.getElementById("roomVoteOption1").value.trim();
+
+    const o2 =
+        document.getElementById("roomVoteOption2").value.trim();
+
+    const o3 =
+        document.getElementById("roomVoteOption3").value.trim();
+
+
+    if(!title || !o1 || !o2){
+
+        showToast(
+            "제목과 선택지 2개는 반드시 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    const options=[o1,o2];
+
+
+    if(o3){
+
+        options.push(o3);
+
+    }
+
+
+    if(!Array.isArray(roomVotes[currentRoomId])){
+
+        roomVotes[currentRoomId]=[];
+
+    }
+
+
+    roomVotes[currentRoomId].push({
+
+        title:title,
+
+        options:options,
+
+        counts:options.map(function(){ return 0; }),
+
+        voters:[],
+
+        createdByName:currentUser.name,
+
+        createdByRole:currentUser.role,
+
+        createdAt:new Date().toLocaleString()
+
+    });
+
+
+    storageSet(
+        STORAGE.roomVotes,
+        JSON.stringify(roomVotes)
+    );
+
+
+    document.getElementById("roomVoteTitle").value="";
+    document.getElementById("roomVoteOption1").value="";
+    document.getElementById("roomVoteOption2").value="";
+    document.getElementById("roomVoteOption3").value="";
+
+
+    loadRoomVotes();
+
+    showToast("투표가 만들어졌습니다.");
+
+}
+
+
+function voteInRoom(voteIndex,optionIndex){
+
+    const list =
+        roomVotes[currentRoomId];
+
+
+    if(!currentUser || !Array.isArray(list)){
+
+        return;
+
+    }
+
+
+    const target =
+        list[voteIndex];
+
+
+    if(!target){
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(target.voters)){
+
+        target.voters=[];
+
+    }
+
+
+    const userKey =
+        createUserKey(currentUser);
+
+
+    if(target.voters.includes(userKey)){
+
+        showToast("이미 투표했습니다.");
+
+        return;
+
+    }
+
+
+    if(
+        optionIndex < 0 ||
+        optionIndex >= target.options.length
+    ){
+
+        return;
+
+    }
+
+
+    target.counts[optionIndex]++;
+
+    target.voters.push(userKey);
+
+
+    storageSet(
+        STORAGE.roomVotes,
+        JSON.stringify(roomVotes)
+    );
+
+
+    loadRoomVotes();
+
+    showToast("투표했습니다.");
+
+}
+
+
+function loadRoomVotes(){
+
+    roomWritePermission(
+        "roomVoteWriterBox",
+        "roomVotePermission",
+        "우리 반 투표"
+    );
+
+
+    const box =
+        document.getElementById("roomVoteList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    const list =
+        Array.isArray(roomVotes[currentRoomId])
+            ? roomVotes[currentRoomId]
+            : [];
+
+
+    box.innerHTML="";
+
+
+    if(list.length === 0){
+
+        box.innerHTML=`
+        <div class="empty">
+        우리 반 투표가 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    list.forEach(function(v,index){
+
+        if(!Array.isArray(v.counts)){
+
+            v.counts=v.options.map(function(){ return 0; });
+
+        }
+
+
+        if(!Array.isArray(v.voters)){
+
+            v.voters=[];
+
+        }
+
+
+        const voted =
+            v.voters.includes(
+                createUserKey(currentUser)
+            );
+
+
+        let optionsHTML="";
+
+
+        v.options.forEach(function(option,optionIndex){
+
+            optionsHTML += `
+
+            <div style="margin-top:10px;">
+
+            <button
+            class="btn purple"
+            onclick="voteInRoom(${index},${optionIndex})"
+            ${voted ? "disabled" : ""}
+            >
+
+            ${voted ? "✅ " : "🗳️ "}
+            ${escapeHTML(option)}
+            ·
+            ${Number(v.counts[optionIndex] || 0)}표
+
+            </button>
+
+            </div>
+
+            `;
+
+        });
+
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>🗳️ ${escapeHTML(v.title)}</h3>
+
+        <p class="info">
+        만든 사람:
+        ${escapeHTML(v.createdByName || "알 수 없음")}
+        ·
+        ${escapeHTML(getRoleName(v.createdByRole))}
+        </p>
+
+        ${optionsHTML}
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+반 행사
+===================================================== */
+
+function addRoomEvent(){
+
+    if(!canManageRoomContent()){
+
+        showToast(
+            "반 행사는 선생님만 등록할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById("roomEventName").value.trim();
+
+    const date =
+        document.getElementById("roomEventDate").value;
+
+
+    if(!name){
+
+        showToast("행사 이름을 입력하세요.");
+
+        return;
+
+    }
+
+
+    if(findBannedWord(name)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(roomEvents[currentRoomId])){
+
+        roomEvents[currentRoomId]=[];
+
+    }
+
+
+    roomEvents[currentRoomId].push({
+
+        name:name,
+
+        date:date,
+
+        createdBy:currentUser.name,
+
+        role:currentUser.role
+
+    });
+
+
+    storageSet(
+        STORAGE.roomEvents,
+        JSON.stringify(roomEvents)
+    );
+
+
+    document.getElementById("roomEventName").value="";
+    document.getElementById("roomEventDate").value="";
+
+
+    loadRoomEvents();
+
+    showToast("행사가 등록되었습니다.");
+
+}
+
+
+function loadRoomEvents(){
+
+    roomWritePermission(
+        "roomEventWriterBox",
+        "roomEventPermission",
+        "우리 반 행사"
+    );
+
+
+    const box =
+        document.getElementById("roomEventList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    const list =
+        Array.isArray(roomEvents[currentRoomId])
+            ? [...roomEvents[currentRoomId]]
+            : [];
+
+
+    box.innerHTML="";
+
+
+    if(list.length === 0){
+
+        box.innerHTML=`
+        <div class="empty">
+        우리 반 행사가 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    list.sort(function(a,b){
+
+        return String(a.date || "9999")
+            .localeCompare(String(b.date || "9999"));
+
+    });
+
+
+    list.forEach(function(item){
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>🎉 ${escapeHTML(item.name)}</h3>
+
+        <p>📅 ${escapeHTML(item.date || "날짜 미정")}</p>
+
+        <p class="info">
+        등록자: ${escapeHTML(item.createdBy || "알 수 없음")}
+        </p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+반 시간표
+
+시간표는 이미 학년·반별로 저장되어 있습니다.
+단체방 번호가 곧 학년·반 키이므로 그대로 가져옵니다.
+===================================================== */
+
+function saveRoomSchedule(){
+
+    /*
+    반 시간표 등록은 선생님만 할 수 있습니다.
+    학생회도 여기서는 등록할 수 없습니다.
+    */
+
+    if(!isTeacher()){
+
+        showToast(
+            "시간표 등록은 선생님만 할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const room =
+        currentRoom();
+
+
+    if(!room || !canEnterRoom(room)){
+
+        showToast(
+            "이 단체방에 접근할 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    const day =
+        document.getElementById("roomScheduleDay").value;
+
+
+    if(
+        !schedules[currentRoomId] ||
+        typeof schedules[currentRoomId] !== "object" ||
+        Array.isArray(schedules[currentRoomId])
+    ){
+
+        schedules[currentRoomId]={};
+
+    }
+
+
+    schedules[currentRoomId][day]=[
+
+        document.getElementById("roomSubject1").value.trim() || "등록 없음",
+        document.getElementById("roomSubject2").value.trim() || "등록 없음",
+        document.getElementById("roomSubject3").value.trim() || "등록 없음",
+        document.getElementById("roomSubject4").value.trim() || "등록 없음",
+        document.getElementById("roomSubject5").value.trim() || "등록 없음"
+
+    ];
+
+
+    storageSet(
+        STORAGE.schedules,
+        JSON.stringify(schedules)
+    );
+
+
+    [
+        "roomSubject1",
+        "roomSubject2",
+        "roomSubject3",
+        "roomSubject4",
+        "roomSubject5"
+    ].forEach(function(id){
+
+        document.getElementById(id).value="";
+
+    });
+
+
+    loadRoomSchedule();
+
+
+    showToast(
+        room.grade + "학년 " +
+        room.classNumber + "반 " +
+        day + " 시간표가 등록되었습니다."
+    );
+
+}
+
+
+function loadRoomSchedule(){
+
+    const box =
+        document.getElementById("roomScheduleDisplay");
+
+    const teacherBox =
+        document.getElementById("roomScheduleTeacherBox");
+
+    const permission =
+        document.getElementById("roomSchedulePermission");
+
+
+    if(!box || !teacherBox || !permission){
+
+        return;
+
+    }
+
+
+    if(isTeacher()){
+
+        teacherBox.classList.remove("hidden");
+
+        permission.innerHTML="";
+
+    }else{
+
+        teacherBox.classList.add("hidden");
+
+        permission.innerHTML=`
+
+        <div class="notice">
+
+        시간표 등록은 선생님만 할 수 있습니다.
+        여기서는 우리 반 시간표를 확인합니다.
+
+        </div>
+
+        `;
+
+    }
+
+
+    const result =
+        getScheduleFor(currentRoomId);
+
+
+    box.innerHTML="";
+
+
+    DAYS.forEach(function(day){
+
+        const data =
+            Array.isArray(result.data[day])
+                ? result.data[day]
+                : ["등록 없음","등록 없음","등록 없음","등록 없음","등록 없음"];
+
+
+        let rows="";
+
+
+        for(let i=0; i<5; i++){
+
+            rows += `
+            <tr>
+            <td>${i+1}교시</td>
+            <td>${escapeHTML(data[i] || "등록 없음")}</td>
+            </tr>`;
+
+        }
+
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>📅 ${day}</h3>
+
+        <table>
+        <tr><th>교시</th><th>과목</th></tr>
+        ${rows}
+        </table>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+단체방 헤더
+===================================================== */
+
+function loadRoomHeader(){
+
+    const header =
+        document.getElementById("roomHeader");
+
+
+    if(!header){
+
+        return;
+
+    }
+
+
+    const room =
+        rooms.find(function(item){
+
+            return item.id === currentRoomId;
+
+        });
+
+
+    if(!room){
+
+        header.innerHTML="";
+
+        return;
+
+    }
+
+
+    header.innerHTML=`
+
+    <h1 style="margin-bottom:8px;">
+    👥 ${escapeHTML(room.name)}
+    </h1>
+
+    <p>
+    ${escapeHTML(room.grade)}학년
+    ${escapeHTML(room.classNumber)}반 단체방
+    </p>
+
+    `;
+
+}
+
+
+/* =====================================================
+단체방 채팅 불러오기
+===================================================== */
+
+function loadRoomChat(){
+
+    const box =
+        document.getElementById("roomMessages");
+
+
+    if(!box || !currentUser){
+
+        return;
+
+    }
+
+
+    const room =
+        rooms.find(function(item){
+
+            return item.id === currentRoomId;
+
+        });
+
+
+    if(!room){
+
+        showPage("roomListPage");
+
+        return;
+
+    }
+
+
+    if(!canEnterRoom(room)){
+
+        showToast(
+            "이 단체방에 들어갈 수 없습니다."
+        );
+
+        showPage("roomListPage");
+
+        return;
+
+    }
+
+
+    loadRoomHeader();
+
+
+    if(!Array.isArray(roomChats[currentRoomId])){
+
+        roomChats[currentRoomId]=[];
+
+    }
+
+
+    const messages =
+        roomChats[currentRoomId];
+
+
+    box.innerHTML="";
+
+
+    if(messages.length === 0){
+
+        box.innerHTML=`
+
+        <div class="empty">
+
+        아직 우리 반 채팅이 없습니다.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    messages.forEach(function(chat){
+
+        box.innerHTML += `
+
+        <div class="roomMessage">
+
+        <div class="roomMessageName">
+
+        ${escapeHTML(chat.name)}
+        ·
+        ${escapeHTML(getRoleName(chat.role))}
+
+        </div>
+
+        <div style="margin-top:6px;">
+
+        ${escapeHTML(chat.text)}
+
+        </div>
+
+        <div class="chatTime">
+
+        ${escapeHTML(chat.time)}
+
+        </div>
+
+        </div>
+
+        `;
+
+    });
+
+
+    box.scrollTop =
+        box.scrollHeight;
+
+}
+
+
+/* =====================================================
+단체방 채팅 전송
+===================================================== */
+
+function sendRoomChat(){
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        return;
+
+    }
+
+
+    const room =
+        rooms.find(function(item){
+
+            return item.id === currentRoomId;
+
+        });
+
+
+    if(!room){
+
+        showToast(
+            "단체방을 찾을 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    if(!canEnterRoom(room)){
+
+        showToast(
+            "이 단체방에 메시지를 보낼 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("roomChatInput");
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다.\n" +
+            "표현을 고쳐서 다시 보내주세요."
+        );
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(roomChats[currentRoomId])){
+
+        roomChats[currentRoomId]=[];
+
+    }
+
+
+    roomChats[currentRoomId].push({
+
+        userKey:
+            createUserKey(currentUser),
+
+        name:
+            currentUser.name,
+
+        role:
+            currentUser.role,
+
+        text:
+            text,
+
+        time:
+            new Date().toLocaleString()
+
+    });
+
+
+    if(roomChats[currentRoomId].length > 300){
+
+        roomChats[currentRoomId] =
+            roomChats[currentRoomId].slice(-300);
+
+    }
+
+
+    storageSet(
+        STORAGE.roomChats,
+        JSON.stringify(roomChats)
+    );
+
+
+    input.value="";
+
+
+    loadRoomChat();
+
+}
+
+
+function roomChatEnter(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendRoomChat();
+
+    }
+
+}
+
+
+/* =====================================================
+게시판 권한 UI
+===================================================== */
+
+function updateSchoolContentPermissions(){
+
+    const noticeWriter =
+        document.getElementById("noticeWriterBox");
+
+    const voteWriter =
+        document.getElementById("voteWriterBox");
+
+    const eventWriter =
+        document.getElementById("eventWriterBox");
+
+    const permission =
+        document.getElementById("noticePermission");
+
+
+    if(canManageSchoolContent()){
+
+        noticeWriter.classList.remove("hidden");
+
+        voteWriter.classList.remove("hidden");
+
+        eventWriter.classList.remove("hidden");
+
+        permission.innerHTML="";
+
+    }else{
+
+        noticeWriter.classList.add("hidden");
+
+        voteWriter.classList.add("hidden");
+
+        eventWriter.classList.add("hidden");
+
+        permission.innerHTML=`
+
+        <div class="notice">
+
+        📢 게시판·투표·행사 등록은
+        선생님 또는 학생회만 할 수 있습니다.
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+게시판
+===================================================== */
+
+function addNotice(){
+
+    if(!canManageSchoolContent()){
+
+        showToast(
+            "선생님 또는 학생회만 게시글을 작성할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("noticeInput");
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        showToast(
+            "게시글을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    notices.unshift({
+
+        text:text,
+
+        name:currentUser.name,
+
+        role:currentUser.role,
+
+        time:new Date().toLocaleString(),
+
+        userKey:
+            createUserKey(currentUser)
+
+    });
+
+
+    storageSet(
+        STORAGE.notices,
+        JSON.stringify(notices)
+    );
+
+
+    input.value="";
+
+    loadNotices();
+
+
+    showToast(
+        "게시글이 등록되었습니다."
+    );
+
+}
+
+
+function loadNotices(){
+
+    const box =
+        document.getElementById("noticeList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    updateSchoolContentPermissions();
+
+
+    box.innerHTML="";
+
+
+    if(notices.length === 0){
+
+        box.innerHTML=
+            `<div class="empty">
+            게시글이 없습니다.
+            </div>`;
+
+        return;
+
+    }
+
+
+    notices.forEach(function(item){
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>
+        📢 ${escapeHTML(item.text)}
+        </h3>
+
+        <p>
+        작성자:
+        ${escapeHTML(item.name)}
+        ·
+        ${escapeHTML(getRoleName(item.role))}
+        </p>
+
+        <p class="info">
+        ${escapeHTML(item.time)}
+        </p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+투표
+===================================================== */
+
+function createVote(){
+
+    if(!canManageSchoolContent()){
+
+        showToast(
+            "선생님 또는 학생회만 투표를 만들 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const title =
+        document.getElementById("voteTitle")
+        .value.trim();
+
+    const option1 =
+        document.getElementById("voteOption1")
+        .value.trim();
+
+    const option2 =
+        document.getElementById("voteOption2")
+        .value.trim();
+
+    const option3 =
+        document.getElementById("voteOption3")
+        .value.trim();
+
+
+    if(
+        !title ||
+        !option1 ||
+        !option2
+    ){
+
+        showToast(
+            "투표 제목과 최소 2개의 선택지를 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    const options =
+        [option1,option2];
+
+
+    if(option3){
+
+        options.push(option3);
+
+    }
+
+
+    votes.push({
+
+        title:title,
+
+        options:options,
+
+        counts:
+            options.map(function(){ return 0; }),
+
+        voters:[],
+
+        /*
+        예전 코드는 여기에 사용자 키를 넣어
+        아이디가 화면에 노출되었습니다.
+        이름과 역할만 저장합니다.
+        */
+
+        createdByName:
+            currentUser.name,
+
+        createdByRole:
+            currentUser.role,
+
+        createdAt:
+            new Date().toLocaleString()
+
+    });
+
+
+    storageSet(
+        STORAGE.votes,
+        JSON.stringify(votes)
+    );
+
+
+    document.getElementById("voteTitle").value="";
+    document.getElementById("voteOption1").value="";
+    document.getElementById("voteOption2").value="";
+    document.getElementById("voteOption3").value="";
+
+
+    loadVotes();
+
+
+    showToast(
+        "투표가 생성되었습니다."
+    );
+
+}
+
+
+function vote(voteIndex,optionIndex){
+
+    if(!currentUser){
+
+        return;
+
+    }
+
+
+    const target =
+        votes[voteIndex];
+
+
+    if(!target){
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(target.voters)){
+
+        target.voters=[];
+
+    }
+
+
+    const userKey =
+        createUserKey(currentUser);
+
+
+    if(target.voters.includes(userKey)){
+
+        showToast(
+            "이미 투표했습니다."
+        );
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(target.counts)){
+
+        target.counts =
+            target.options.map(function(){ return 0; });
+
+    }
+
+
+    if(
+        optionIndex < 0 ||
+        optionIndex >= target.options.length
+    ){
+
+        return;
+
+    }
+
+
+    target.counts[optionIndex]++;
+
+    target.voters.push(userKey);
+
+
+    storageSet(
+        STORAGE.votes,
+        JSON.stringify(votes)
+    );
+
+
+    loadVotes();
+
+
+    showToast(
+        "투표했습니다."
+    );
+
+}
+
+
+function loadVotes(){
+
+    const box =
+        document.getElementById("voteList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    updateSchoolContentPermissions();
+
+
+    box.innerHTML="";
+
+
+    if(votes.length === 0){
+
+        box.innerHTML=
+            `<div class="empty">
+            등록된 투표가 없습니다.
+            </div>`;
+
+        return;
+
+    }
+
+
+    votes.forEach(function(v,index){
+
+        if(!Array.isArray(v.options)){
+
+            v.options =
+                ["찬성","반대"];
+
+        }
+
+
+        if(!Array.isArray(v.counts)){
+
+            v.counts =
+                v.options.map(function(){ return 0; });
+
+        }
+
+
+        if(!Array.isArray(v.voters)){
+
+            v.voters=[];
+
+        }
+
+
+        const voted =
+            currentUser &&
+            v.voters.includes(
+                createUserKey(currentUser)
+            );
+
+
+        /*
+        예전 데이터에는 사용자 키가 들어 있으므로
+        화면에 그대로 내보내지 않습니다.
+        */
+
+        const creator =
+            v.createdByName
+                ? v.createdByName +
+                  " · " +
+                  getRoleName(v.createdByRole)
+                : "알 수 없음";
+
+
+        let optionsHTML="";
+
+
+        v.options.forEach(function(
+            option,
+            optionIndex
+        ){
+
+            optionsHTML += `
+
+            <div style="margin-top:10px;">
+
+            <button
+            class="btn"
+            onclick="vote(${index},${optionIndex})"
+            ${voted ? "disabled" : ""}
+            >
+
+            ${voted ? "✅ " : "🗳️ "}
+
+            ${escapeHTML(option)}
+
+            ·
+            ${Number(v.counts[optionIndex] || 0)}표
+
+            </button>
+
+            </div>
+
+            `;
+
+        });
+
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>
+        🗳️ ${escapeHTML(v.title)}
+        </h3>
+
+        <p class="info">
+
+        만든 사람:
+        ${escapeHTML(creator)}
+
+        </p>
+
+        ${optionsHTML}
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+행사
+===================================================== */
+
+function addEvent(){
+
+    if(!canManageSchoolContent()){
+
+        showToast(
+            "선생님 또는 학생회만 행사를 등록할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const name =
+        document.getElementById("eventName")
+        .value.trim();
+
+    const date =
+        document.getElementById("eventDate")
+        .value;
+
+
+    if(!name){
+
+        showToast(
+            "행사 이름을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    events.push({
+
+        name:name,
+
+        date:date,
+
+        createdBy:
+            currentUser.name,
+
+        role:
+            currentUser.role
+
+    });
+
+
+    storageSet(
+        STORAGE.events,
+        JSON.stringify(events)
+    );
+
+
+    document.getElementById("eventName").value="";
+    document.getElementById("eventDate").value="";
+
+
+    loadEvents();
+
+
+    showToast(
+        "행사가 등록되었습니다."
+    );
+
+}
+
+
+function loadEvents(){
+
+    const box =
+        document.getElementById("eventList");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    updateSchoolContentPermissions();
+
+
+    box.innerHTML="";
+
+
+    if(events.length === 0){
+
+        box.innerHTML=
+            `<div class="empty">
+            등록된 행사가 없습니다.
+            </div>`;
+
+        return;
+
+    }
+
+
+    const sorted =
+        [...events].sort(function(a,b){
+
+            return String(a.date || "9999")
+                .localeCompare(
+                    String(b.date || "9999")
+                );
+
+        });
+
+
+    sorted.forEach(function(item){
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>
+        🎉 ${escapeHTML(item.name)}
+        </h3>
+
+        <p>
+        📅 ${escapeHTML(item.date || "날짜 미정")}
+        </p>
+
+        <p class="info">
+
+        등록자:
+        ${escapeHTML(item.createdBy || "알 수 없음")}
+
+        </p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+급식
+
+예전 코드는 오늘 날짜만 보여줘서
+내일 이후 급식을 저장해도 화면에 나오지 않았습니다.
+날짜를 골라서 보고, 앞으로의 급식도 목록으로 봅니다.
+===================================================== */
+
+function loadMeal(){
+
+    const teacherBox =
+        document.getElementById("teacherMealBox");
+
+
+    if(!teacherBox){
+
+        return;
+
+    }
+
+
+    if(isTeacher()){
+
+        teacherBox.classList.remove("hidden");
+
+    }else{
+
+        teacherBox.classList.add("hidden");
+
+    }
+
+
+    const viewInput =
+        document.getElementById("mealViewDate");
+
+    const display =
+        document.getElementById("mealDisplay");
+
+    const upcoming =
+        document.getElementById("mealUpcoming");
+
+
+    if(!viewInput || !display || !upcoming){
+
+        return;
+
+    }
+
+
+    if(!viewInput.value){
+
+        viewInput.value =
+            getToday();
+
+    }
+
+
+    const targetDate =
+        viewInput.value;
+
+
+    if(meals[targetDate]){
+
+        display.innerHTML=`
+
+        <div class="item">
+
+        <h3>
+        📅 ${escapeHTML(targetDate)}
+        </h3>
+
+        <p style="white-space:pre-line;">
+
+        ${escapeHTML(meals[targetDate])}
+
+        </p>
+
+        </div>
+
+        `;
+
+    }else{
+
+        display.innerHTML=`
+
+        <div class="item">
+
+        ${escapeHTML(targetDate)}에 등록된 급식이 없습니다.
+
+        </div>
+
+        `;
+
+    }
+
+
+    const today =
+        getToday();
+
+
+    const upcomingDates =
+        Object.keys(meals)
+        .filter(function(date){
+
+            return date >= today;
+
+        })
+        .sort();
+
+
+    upcoming.innerHTML="";
+
+
+    if(upcomingDates.length === 0){
+
+        upcoming.innerHTML=`
+
+        <div class="empty">
+
+        등록된 급식이 없습니다.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    upcomingDates
+    .slice(0,10)
+    .forEach(function(date){
+
+        upcoming.innerHTML += `
+
+        <div class="item">
+
+        <h3>
+        📅 ${escapeHTML(date)}
+        </h3>
+
+        <p style="white-space:pre-line;">
+
+        ${escapeHTML(meals[date])}
+
+        </p>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+function saveMeal(){
+
+    if(!isTeacher()){
+
+        showToast(
+            "선생님만 급식을 관리할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const date =
+        document.getElementById("mealDate")
+        .value;
+
+    const text =
+        document.getElementById("mealText")
+        .value.trim();
+
+
+    if(!date || !text){
+
+        showToast(
+            "날짜와 급식 내용을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    meals[date]=text;
+
+
+    storageSet(
+        STORAGE.meals,
+        JSON.stringify(meals)
+    );
+
+
+    document.getElementById("mealDate").value="";
+    document.getElementById("mealText").value="";
+
+
+    document.getElementById("mealViewDate").value = date;
+
+
+    loadMeal();
+
+
+    showToast(
+        date + " 급식이 저장되었습니다."
+    );
+
+}
+
+
+/* =====================================================
+시간표
+
+예전 코드는 학교 전체가 시간표 하나를 공유해서
+학년·반 구조와 맞지 않았습니다.
+학년·반별로 저장합니다.
+
+기존 데이터는 "공용" 시간표로 옮겨,
+자기 반 시간표가 없을 때 대신 보여줍니다.
+===================================================== */
+
+function migrateSchedules(){
+
+    const hasOldShape =
+        DAYS.some(function(day){
+
+            return Array.isArray(schedules[day]);
+
+        });
+
+
+    if(!hasOldShape){
+
+        return;
+
+    }
+
+
+    const legacy = {};
+
+
+    DAYS.forEach(function(day){
+
+        if(Array.isArray(schedules[day])){
+
+            legacy[day]=schedules[day];
+
+        }
+
+
+        delete schedules[day];
+
+    });
+
+
+    schedules["공용"]=legacy;
+
+
+    storageSet(
+        STORAGE.schedules,
+        JSON.stringify(schedules)
+    );
+
+}
+
+
+function getScheduleFor(classKey){
+
+    if(
+        schedules[classKey] &&
+        typeof schedules[classKey] === "object"
+    ){
+
+        return{
+            data:schedules[classKey],
+            isShared:false
+        };
+
+    }
+
+
+    if(schedules["공용"]){
+
+        return{
+            data:schedules["공용"],
+            isShared:true
+        };
+
+    }
+
+
+    return{
+        data:{},
+        isShared:false
+    };
+
+}
+
+
+function viewSchedule(){
+
+    if(!isTeacher()){
+
+        return;
+
+    }
+
+
+    const grade =
+        document.getElementById("scheduleGrade")
+        .value;
+
+    const classNumber =
+        document.getElementById("scheduleClass")
+        .value;
+
+
+    if(!grade || !classNumber){
+
+        showToast(
+            "조회할 학년과 반을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    scheduleViewKey =
+        createClassKey(grade,classNumber);
+
+
+    loadSchedules();
+
+
+    showToast(
+        grade + "학년 " +
+        classNumber + "반 시간표를 불러왔습니다."
+    );
+
+}
+
+
+function loadSchedules(){
+
+    const teacherBox =
+        document.getElementById("teacherScheduleBox");
+
+
+    if(!teacherBox || !currentUser){
+
+        return;
+
+    }
+
+
+    if(isTeacher()){
+
+        teacherBox.classList.remove("hidden");
+
+
+        const gradeInput =
+            document.getElementById("scheduleGrade");
+
+        const classInput =
+            document.getElementById("scheduleClass");
+
+
+        if(!gradeInput.value){
+
+            gradeInput.value =
+                currentUser.grade;
+
+        }
+
+
+        if(!classInput.value){
+
+            classInput.value =
+                currentUser.classNumber;
+
+        }
+
+    }else{
+
+        teacherBox.classList.add("hidden");
+
+    }
+
+
+    if(!scheduleViewKey){
+
+        scheduleViewKey =
+            createClassKey(
+                currentUser.grade,
+                currentUser.classNumber
+            );
+
+    }
+
+
+    /*
+    학생과 학생회는 항상 자기 반 시간표만 봅니다.
+    */
+
+    if(!isTeacher()){
+
+        scheduleViewKey =
+            createClassKey(
+                currentUser.grade,
+                currentUser.classNumber
+            );
+
+    }
+
+
+    const target =
+        document.getElementById("scheduleTarget");
+
+    const box =
+        document.getElementById("scheduleDisplay");
+
+
+    if(!target || !box){
+
+        return;
+
+    }
+
+
+    const parts =
+        scheduleViewKey.split("-");
+
+
+    const result =
+        getScheduleFor(scheduleViewKey);
+
+
+    target.innerHTML=`
+
+    <div class="notice">
+
+    현재 보고 있는 시간표:
+    ${escapeHTML(parts[0])}학년
+    ${escapeHTML(parts[1])}반
+
+    ${
+        result.isShared
+            ? "<br>이 반의 시간표가 아직 없어 이전에 저장된 공용 시간표를 보여줍니다."
+            : ""
+    }
+
+    </div>
+
+    `;
+
+
+    box.innerHTML="";
+
+
+    DAYS.forEach(function(day){
+
+        const data =
+            Array.isArray(result.data[day])
+                ? result.data[day]
+                : [
+                    "등록 없음",
+                    "등록 없음",
+                    "등록 없음",
+                    "등록 없음",
+                    "등록 없음"
+                ];
+
+
+        let rows="";
+
+
+        for(let i=0; i<5; i++){
+
+            rows += `
+
+            <tr>
+            <td>${i+1}교시</td>
+            <td>${escapeHTML(data[i] || "등록 없음")}</td>
+            </tr>
+
+            `;
+
+        }
+
+
+        box.innerHTML += `
+
+        <div class="item">
+
+        <h3>
+        📅 ${day}
+        </h3>
+
+        <table>
+
+        <tr>
+        <th>교시</th>
+        <th>과목</th>
+        </tr>
+
+        ${rows}
+
+        </table>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+function saveSchedule(){
+
+    if(!isTeacher()){
+
+        showToast(
+            "선생님만 시간표를 관리할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const grade =
+        document.getElementById("scheduleGrade")
+        .value;
+
+    const classNumber =
+        document.getElementById("scheduleClass")
+        .value;
+
+
+    if(!grade || !classNumber){
+
+        showToast(
+            "시간표를 저장할 학년과 반을 입력하세요."
+        );
+
+        return;
+
+    }
+
+
+    const day =
+        document.getElementById("scheduleDay")
+        .value;
+
+
+    const classKey =
+        createClassKey(grade,classNumber);
+
+
+    if(
+        !schedules[classKey] ||
+        typeof schedules[classKey] !== "object" ||
+        Array.isArray(schedules[classKey])
+    ){
+
+        schedules[classKey]={};
+
+    }
+
+
+    schedules[classKey][day]=[
+
+        document.getElementById("subject1").value.trim()
+            || "등록 없음",
+
+        document.getElementById("subject2").value.trim()
+            || "등록 없음",
+
+        document.getElementById("subject3").value.trim()
+            || "등록 없음",
+
+        document.getElementById("subject4").value.trim()
+            || "등록 없음",
+
+        document.getElementById("subject5").value.trim()
+            || "등록 없음"
+
+    ];
+
+
+    storageSet(
+        STORAGE.schedules,
+        JSON.stringify(schedules)
+    );
+
+
+    [
+        "subject1",
+        "subject2",
+        "subject3",
+        "subject4",
+        "subject5"
+    ].forEach(function(id){
+
+        document.getElementById(id).value="";
+
+    });
+
+
+    scheduleViewKey = classKey;
+
+
+    loadSchedules();
+
+
+    showToast(
+        grade + "학년 " +
+        classNumber + "반 " +
+        day + " 시간표가 저장되었습니다."
+    );
+
+}
+
+
+/* =====================================================
+사용자 고유 키
+
+내부 식별용입니다.
+화면에는 출력하지 않습니다.
+===================================================== */
+
+function createUserKey(user){
+
+    if(!user){
+
+        return "";
+
+    }
+
+
+    if(user.role === "teacher"){
+
+        return[
+            user.role,
+            user.id,
+            user.grade,
+            user.classNumber
+        ].join("|");
+
+    }
+
+
+    return[
+        user.role,
+        user.id,
+        user.grade,
+        user.classNumber,
+        user.studentNumber
+    ].join("|");
+
+}
+
+
+/* =====================================================
+오늘 날짜
+===================================================== */
+
+function getToday(){
+
+    const now =
+        new Date();
+
+
+    return(
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth()+1).padStart(2,"0") +
+        "-" +
+        String(now.getDate()).padStart(2,"0")
+    );
+
+}
+
+
+/* =====================================================
+HTML 안전 처리
+===================================================== */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function escapeJS(text){
+
+    return String(text)
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/"/g,"&quot;")
+        .replace(/\n/g,"\\n")
+        .replace(/\r/g,"\\r");
+
+}
+
+
+/* =====================================================
+토스트
+===================================================== */
+
+function showToast(text){
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.textContent =
+        text;
+
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(function(){
+
+            toast.style.display="none";
+
+        },4000);
+
+}
+
+
+/* =====================================================
+전체 데이터 초기화
+
+선생님만 실행할 수 있습니다.
+관리자 비밀번호와 확인 문구를 함께 요구합니다.
+===================================================== */
+
+let resetArmed = false;
+
+let resetArmTimer = null;
+
+
+function resetAllData(){
+
+    if(!canManageSchoolContent()){
+
+        showToast(
+            "전체 초기화는 선생님과 학생회만 할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("resetPw");
+
+
+    if(!input || input.value !== RESET_PASSWORD){
+
+        resetArmed=false;
+
+        showToast(
+            "초기화 전용 비밀번호가 맞지 않습니다."
+        );
+
+        return;
+
+    }
+
+
+    /*
+    비밀번호가 맞아도 한 번에 지워지지 않습니다.
+    같은 버튼을 10초 안에 한 번 더 눌러야 실행됩니다.
+    미리보기처럼 확인창이 막힌 환경에서도
+    실수로 눌러 지워지는 일을 막기 위한 장치입니다.
+    */
+
+    if(!resetArmed){
+
+        resetArmed=true;
+
+
+        showToast(
+            "삭제 버튼을 10초 안에 한 번 더 누르면\n" +
+            "모든 데이터가 지워집니다. 복구할 수 없습니다."
+        );
+
+
+        clearTimeout(resetArmTimer);
+
+
+        resetArmTimer =
+            setTimeout(function(){
+
+                resetArmed=false;
+
+            },10000);
+
+
+        return;
+
+    }
+
+
+    resetArmed=false;
+
+    clearTimeout(resetArmTimer);
+
+
+    Object.values(STORAGE)
+    .forEach(function(key){
+
+        storageRemove(key);
+
+    });
+
+
+    Object.values(OLD_STORAGE)
+    .forEach(function(key){
+
+        storageRemove(key);
+
+    });
+
+
+    users=[];
+    chats=[];
+    notices=[];
+    votes=[];
+    events=[];
+    meals={};
+    schedules={};
+    rooms=[];
+    roomChats={};
+    roomNotices={};
+    roomVotes={};
+    roomEvents={};
+    inquiries=[];
+
+    currentUser=null;
+    currentRoomId=null;
+    scheduleViewKey=null;
+
+
+    input.value="";
+
+
+    showToast(
+        "SchoolHub 전체 데이터가 초기화되었습니다."
+    );
+
+
+    setTimeout(function(){
+
+        location.reload();
+
+    },1200);
+
+}
+
+
+/* =====================================================
+초기화
+===================================================== */
+
+function initialize(){
+
+    if(!storageAvailable){
+
+        showStorageBanner();
+
+    }
+
+    migrateSchedules();
+
+    roleChanged();
+
+    loginRoleChanged();
+
+    loadNotices();
+
+    loadVotes();
+
+    loadEvents();
+
+    loadChat();
+
+    loadRooms();
+
+    loadInquiries();
+
+    showPage("signupPage");
+
+    initBetaNotice();
+
+}
+
+
+initialize();
+
+</script>
+
+</body>
+</html>
