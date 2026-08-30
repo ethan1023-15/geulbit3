@@ -559,6 +559,50 @@ hr{
     border-top:1px solid #e2e8f0;
 }
 
+.inquiryCard{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    padding:18px;
+    margin-top:14px;
+}
+
+.inquiryLine{
+    margin-bottom:6px;
+    line-height:1.7;
+}
+
+.inquiryLabel{
+    color:#2563eb;
+    font-weight:bold;
+    margin-right:6px;
+}
+
+.inquiryBody{
+    white-space:pre-line;
+    margin-top:4px;
+}
+
+.replyBox{
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px dashed #cbd5e1;
+}
+
+.replyItem{
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:8px;
+}
+
+.replyName{
+    color:#7c3aed;
+    font-weight:bold;
+    font-size:14px;
+}
+
 .miniIcon{
     width:20px;
     height:20px;
@@ -1211,13 +1255,17 @@ onclick="backDashboard()"
 
 <div id="inquiryOnlineState"></div>
 
-<div id="inquiryMessages" class="chatBox"></div>
+<h2>새 문의 쓰기</h2>
 
 <input
-id="inquiryInput"
-placeholder="문의할 내용을 입력하세요"
-onkeydown="inquiryEnter(event)"
+id="inquiryTitle"
+placeholder="제목"
 >
+
+<textarea
+id="inquiryInput"
+placeholder="내용을 자세히 적어주세요"
+></textarea>
 
 <button
 class="btn"
@@ -1225,6 +1273,12 @@ onclick="sendInquiry()"
 >
 ✉️ 문의 남기기
 </button>
+
+<hr style="margin:25px 0;">
+
+<h2>문의 목록</h2>
+
+<div id="inquiryMessages"></div>
 
 <button
 class="btn gray"
@@ -1888,7 +1942,7 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-08";
+const BUILD_ID = "2026-08-30-09";
 
 
 const MANAGER_PASSWORD = "2023";
@@ -2017,7 +2071,8 @@ const STORAGE = {
     roomNotices:"schoolhub_v4_room_notices",
     roomVotes:"schoolhub_v4_room_votes",
     roomEvents:"schoolhub_v4_room_events",
-    inquiries:"schoolhub_v4_inquiries"
+    inquiries:"schoolhub_v4_inquiries",
+    inquiryReplies:"schoolhub_v4_inquiry_replies"
 
 };
 
@@ -2321,6 +2376,9 @@ let roomEvents =
 let inquiries =
     loadJSON(STORAGE.inquiries, []);
 
+let inquiryReplies =
+    loadJSON(STORAGE.inquiryReplies, []);
+
 
 let currentUser = null;
 
@@ -2407,6 +2465,11 @@ function saveAll(){
     storageSet(
         STORAGE.inquiries,
         JSON.stringify(inquiries)
+    );
+
+    storageSet(
+        STORAGE.inquiryReplies,
+        JSON.stringify(inquiryReplies)
     );
 
 }
@@ -5225,6 +5288,32 @@ function subscribeInquiries(){
 
         });
 
+
+    /*
+    답글도 실시간으로 받아옵니다.
+    */
+
+    fb.db.collection("inquiryReplies")
+        .orderBy("createdAt","asc")
+        .limit(500)
+        .onSnapshot(function(snapshot){
+
+            inquiryReplies =
+                snapshot.docs.map(function(item){
+
+                    return item.data();
+
+                });
+
+
+            loadInquiries();
+
+        },function(error){
+
+            console.error(error);
+
+        });
+
 }
 
 
@@ -6088,6 +6177,64 @@ function mealIcon(){
 누가 남겼는지 이름과 역할이 함께 남습니다.
 ===================================================== */
 
+function getAuthorLabel(item){
+
+    if(!item){
+
+        return "알 수 없음";
+
+    }
+
+
+    let label = "";
+
+
+    if(item.grade && item.classNumber){
+
+        label += item.grade + "학년 " + item.classNumber + "반 ";
+
+    }
+
+
+    if(
+        item.role !== "teacher" &&
+        item.studentNumber
+    ){
+
+        label += item.studentNumber + "번 ";
+
+    }
+
+
+    label += (item.name || "알 수 없음");
+
+    label += " (" + getRoleName(item.role) + ")";
+
+
+    return label;
+
+}
+
+
+function makeAuthorFields(){
+
+    return{
+
+        name:currentUser.name,
+
+        role:currentUser.role,
+
+        grade:currentUser.grade,
+
+        classNumber:currentUser.classNumber,
+
+        studentNumber:currentUser.studentNumber || ""
+
+    };
+
+}
+
+
 async function sendInquiry(){
 
     if(blockedByLock()){
@@ -6106,50 +6253,73 @@ async function sendInquiry(){
     }
 
 
+    const titleInput =
+        document.getElementById("inquiryTitle");
+
     const input =
         document.getElementById("inquiryInput");
+
+
+    const title =
+        titleInput.value.trim();
 
     const text =
         input.value.trim();
 
 
-    if(!text){
+    if(!title){
+
+        showToast("제목을 입력하세요.");
 
         return;
 
     }
 
 
-    if(findBannedWord(text)){
+    if(!text){
+
+        showToast("내용을 입력하세요.");
+
+        return;
+
+    }
+
+
+    if(
+        findBannedWord(title) ||
+        findBannedWord(text)
+    ){
 
         showToast(
             "사용할 수 없는 표현이 있습니다.\n" +
             "표현을 고쳐서 다시 보내주세요."
         );
 
-        input.focus();
-
         return;
 
     }
 
 
-    const message = {
+    const message =
+        Object.assign(
+            {
 
-        id:makeMessageId(),
+                id:makeMessageId(),
 
-        name:currentUser.name,
+                title:title,
 
-        role:currentUser.role,
+                text:text,
 
-        text:text,
+                time:new Date().toLocaleString(),
 
-        time:new Date().toLocaleString(),
+                createdAt:Date.now()
 
-        createdAt:Date.now()
+            },
+            makeAuthorFields()
+        );
 
-    };
 
+    titleInput.value="";
 
     input.value="";
 
@@ -6162,7 +6332,7 @@ async function sendInquiry(){
 
         if(sent){
 
-            showToast("문의사항이 등록되었습니다.");
+            showToast("문의가 등록되었습니다.");
 
             return;
 
@@ -6191,7 +6361,115 @@ async function sendInquiry(){
 
     broadcastInquiries();
 
-    showToast("문의사항이 등록되었습니다.");
+    showToast("문의가 등록되었습니다.");
+
+}
+
+
+async function sendReply(inquiryId){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
+
+    if(!currentUser){
+
+        showToast("로그인이 필요합니다.");
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById("reply-" + inquiryId);
+
+
+    if(!input){
+
+        return;
+
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text){
+
+        showToast("답글 내용을 입력하세요.");
+
+        return;
+
+    }
+
+
+    if(findBannedWord(text)){
+
+        showToast(
+            "사용할 수 없는 표현이 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const reply =
+        Object.assign(
+            {
+
+                id:makeMessageId(),
+
+                inquiryId:inquiryId,
+
+                text:text,
+
+                time:new Date().toLocaleString(),
+
+                createdAt:Date.now()
+
+            },
+            makeAuthorFields()
+        );
+
+
+    input.value="";
+
+
+    if(onlineMode === "firebase"){
+
+        const sent =
+            await pushOnline("inquiryReplies",reply);
+
+
+        if(sent){
+
+            showToast("답글을 남겼습니다.");
+
+            return;
+
+        }
+
+    }
+
+
+    inquiryReplies.push(reply);
+
+
+    storageSet(
+        STORAGE.inquiryReplies,
+        JSON.stringify(inquiryReplies)
+    );
+
+
+    loadInquiries();
+
+    showToast("답글을 남겼습니다.");
 
 }
 
@@ -6203,6 +6481,19 @@ function inquiryEnter(event){
         event.preventDefault();
 
         sendInquiry();
+
+    }
+
+}
+
+
+function replyEnter(event,inquiryId){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendReply(inquiryId);
 
     }
 
@@ -6232,7 +6523,7 @@ function loadInquiries(){
 
         box.innerHTML=`
         <div class="empty">
-        아직 등록된 문의사항이 없습니다.
+        아직 등록된 문의가 없습니다.
         </div>`;
 
         return;
@@ -6240,23 +6531,120 @@ function loadInquiries(){
     }
 
 
-    inquiries.forEach(function(item){
+    /*
+    최근에 올린 문의가 위로 오게 합니다.
+    */
+
+    const list =
+        [...inquiries].sort(function(a,b){
+
+            return(
+                Number(b.createdAt || 0) -
+                Number(a.createdAt || 0)
+            );
+
+        });
+
+
+    list.forEach(function(item){
+
+        const inquiryId =
+            item.id || "";
+
+
+        const replies =
+            inquiryReplies
+            .filter(function(reply){
+
+                return reply.inquiryId === inquiryId;
+
+            })
+            .sort(function(a,b){
+
+                return(
+                    Number(a.createdAt || 0) -
+                    Number(b.createdAt || 0)
+                );
+
+            });
+
+
+        let replyHTML = "";
+
+
+        replies.forEach(function(reply){
+
+            replyHTML += `
+
+            <div class="replyItem">
+
+            <div class="replyName">
+            ↳ ${escapeHTML(getAuthorLabel(reply))}
+            </div>
+
+            <div style="margin-top:4px;white-space:pre-line;">
+            ${escapeHTML(reply.text)}
+            </div>
+
+            <div class="chatTime">
+            ${escapeHTML(reply.time || "")}
+            </div>
+
+            </div>
+
+            `;
+
+        });
+
+
+        const titleLine =
+            item.title
+                ? `<div class="inquiryLine">
+                   <span class="inquiryLabel">제목:</span>
+                   ${escapeHTML(item.title)}
+                   </div>`
+                : "";
+
 
         box.innerHTML += `
 
-        <div class="chat">
+        <div class="inquiryCard">
 
-        <div class="chatName">
-        ${escapeHTML(item.name)}
-        · ${escapeHTML(getRoleName(item.role))}
+        <div class="inquiryLine">
+        <span class="inquiryLabel">작성자:</span>
+        ${escapeHTML(getAuthorLabel(item))}
         </div>
 
-        <div style="margin-top:5px;">
-        ${escapeHTML(item.text)}
+        ${titleLine}
+
+        <div class="inquiryLine">
+        <span class="inquiryLabel">내용:</span>
+        <div class="inquiryBody">${escapeHTML(item.text)}</div>
         </div>
 
         <div class="chatTime">
-        ${escapeHTML(item.time)}
+        ${escapeHTML(item.time || "")}
+        </div>
+
+        <div class="replyBox">
+
+        <b>답글 ${replies.length}개</b>
+
+        ${replyHTML}
+
+        <input
+        id="reply-${escapeHTML(inquiryId)}"
+        placeholder="답글을 입력하세요"
+        onkeydown="replyEnter(event,'${escapeJS(inquiryId)}')"
+        >
+
+        <button
+        class="btn purple"
+        onclick="sendReply('${escapeJS(inquiryId)}')"
+        >
+        ↳ 답글 달기
+        </button>
+
         </div>
 
         </div>
@@ -6264,9 +6652,6 @@ function loadInquiries(){
         `;
 
     });
-
-
-    box.scrollTop = box.scrollHeight;
 
 }
 
@@ -9679,6 +10064,8 @@ async function resetAllData(){
 
         await clearOnlineCollection("inquiries");
 
+        await clearOnlineCollection("inquiryReplies");
+
     }
 
 
@@ -9720,6 +10107,7 @@ async function resetAllData(){
     roomVotes={};
     roomEvents={};
     inquiries=[];
+    inquiryReplies=[];
 
     currentUser=null;
     currentRoomId=null;
