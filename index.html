@@ -465,6 +465,47 @@ hr{
     max-width:90%;
 }
 
+#lockOverlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#0f172a;
+    color:#e2e8f0;
+    z-index:20000;
+    padding:24px;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+#lockOverlay.show{
+    display:flex;
+}
+
+.lockBox{
+    max-width:460px;
+}
+
+.lockIcon{
+    font-size:64px;
+    margin-bottom:14px;
+}
+
+.lockClock{
+    font-size:34px;
+    font-weight:bold;
+    margin:14px 0;
+    color:#93c5fd;
+}
+
+.lockText{
+    line-height:1.9;
+    color:#cbd5e1;
+}
+
 #betaOverlay{
     display:none;
     position:fixed;
@@ -516,6 +557,29 @@ hr{
     margin-top:25px;
     padding-top:25px;
     border-top:1px solid #e2e8f0;
+}
+
+.miniIcon{
+    width:20px;
+    height:20px;
+    vertical-align:-4px;
+    margin-right:6px;
+    color:#2563eb;
+}
+
+.mealHead{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#2563eb;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.mealHead .miniIcon{
+    width:26px;
+    height:26px;
+    margin:0;
 }
 
 .smallText{
@@ -579,14 +643,32 @@ hr{
 
 <div class="logo">
 🏫 SchoolHub
+<span id="buildTag" class="smallText" style="margin-left:8px;"></span>
 </div>
 
-<nav>
+<nav id="topNav">
 <button onclick="showPage('signupPage')">회원가입</button>
 <button onclick="showPage('loginPage')">로그인</button>
 </nav>
 
 </header>
+
+<div id="lockOverlay">
+
+<div class="lockBox">
+
+<div class="lockIcon">🌙</div>
+
+<h1>지금은 이용할 수 없습니다</h1>
+
+<div id="lockClock" class="lockClock"></div>
+
+<p id="lockText" class="lockText"></p>
+
+</div>
+
+</div>
+
 
 <div id="betaOverlay">
 
@@ -1000,6 +1082,8 @@ onclick="logout()"
 
 </div>
 
+<div id="chatOnlineState"></div>
+
 <div
 id="chatMessages"
 class="chatBox"
@@ -1124,6 +1208,8 @@ onclick="backDashboard()"
 ⚠️ 욕설 및 타인 비하 표현 금지<br>
 공백, 특수문자, 숫자를 이용한 우회 표현도 차단합니다.
 </div>
+
+<div id="inquiryOnlineState"></div>
 
 <div id="inquiryMessages" class="chatBox"></div>
 
@@ -1410,6 +1496,8 @@ class="roomHeader"
 욕설 및 타인 비하 표현은 금지됩니다.
 
 </div>
+
+<div id="roomOnlineState"></div>
 
 <div
 id="roomMessages"
@@ -1773,8 +1861,6 @@ type="text"
 placeholder="초기화 전용 비밀번호"
 >
 
-<p id="resetPwHint" class="smallText"></p>
-
 <button
 class="btn red"
 onclick="resetAllData()"
@@ -1802,7 +1888,10 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const MANAGER_PASSWORD = "9999";
+const BUILD_ID = "2026-08-30-08";
+
+
+const MANAGER_PASSWORD = "2023";
 
 
 /* =====================================================
@@ -1813,6 +1902,101 @@ const MANAGER_PASSWORD = "9999";
 ===================================================== */
 
 const RESET_PASSWORD = "2023.3.1.1,2,3,4,5단지";
+
+
+/* =====================================================
+온라인 연결 설정
+
+파이어베이스 설정값을 아래에 넣으면
+채팅, 반 채팅, 문의사항이 온라인으로 바뀝니다.
+여러 사람이 같은 글을 보게 됩니다.
+
+값이 비어 있으면 예전처럼
+이 기기 안에서만 저장됩니다.
+===================================================== */
+
+const FIREBASE_CONFIG = {
+
+    apiKey:"AIzaSyAbfsCAKBWZyXnEPwp2mVYNX1KCQR2Ucrw",
+    authDomain:"geulbit.firebaseapp.com",
+    projectId:"geulbit",
+    storageBucket:"geulbit.firebasestorage.app",
+    messagingSenderId:"937476180490",
+    appId:"1:937476180490:web:300a7e278a28d7c844adf3"
+
+};
+
+
+const FIREBASE_VERSION = "10.12.0";
+
+
+/* =====================================================
+공개 중계 서버
+
+계정 없이 바로 쓸 수 있는 공용 서버입니다.
+같은 주소에 들어온 사람끼리 글이 오갑니다.
+
+주의
+누구나 접속할 수 있는 공용 서버입니다.
+주소와 통로 이름을 아는 사람은 대화를 볼 수 있습니다.
+이름, 연락처, 비밀 이야기는 쓰지 마세요.
+
+나중에 파이어베이스를 연결하면
+그쪽이 우선으로 쓰이고 이 서버는 쓰이지 않습니다.
+===================================================== */
+
+/*
+맨 앞은 443번 포트를 쓰는 서버입니다.
+학교나 공유기에서 특이한 포트를 막는 경우가 많아
+평범한 인터넷 주소와 같은 포트를 먼저 시도합니다.
+*/
+
+const RELAY_URLS = [
+    "wss://mqtt.eclipseprojects.io/mqtt",
+    "wss://broker.emqx.io:8084/mqtt",
+    "wss://broker.hivemq.com:8884/mqtt",
+    "wss://test.mosquitto.org:8081/"
+];
+
+/*
+통로 이름에 빌드 번호를 붙입니다.
+새 파일을 올리면 통로가 바뀌므로
+예전 대화가 따라오지 않고 깨끗하게 시작합니다.
+
+기기 종류와는 아무 상관이 없습니다.
+휴대폰이든 컴퓨터든 같은 통로를 씁니다.
+*/
+
+const RELAY_ROOT = "geulbit2-" + BUILD_ID;
+
+/*
+버전을 고정하지 않습니다.
+고정한 번호가 없어지면 파일을 못 받아
+연결이 통째로 실패하기 때문입니다.
+*/
+
+const RELAY_SCRIPTS = [
+    "https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js",
+    "https://unpkg.com/mqtt/dist/mqtt.min.js",
+    "https://cdn.jsdelivr.net/npm/mqtt@5/dist/mqtt.min.js"
+];
+
+
+let relayStatus = "준비 중";
+
+let relayServer = "";
+
+
+let relayClient = null;
+
+let onlineMode = null;
+
+
+let onlineReady = false;
+
+let fb = null;
+
+let roomUnsubscribe = null;
 
 
 /* =====================================================
@@ -1993,9 +2177,6 @@ function showStorageBanner(){
 아래 상수 한 줄과 그 아래 블록을 지우면
 데이터가 계속 유지됩니다.
 ===================================================== */
-
-const BUILD_ID = "2026-08-29-04";
-
 
 (function(){
 
@@ -2347,7 +2528,40 @@ async function hashPassword(password,salt){
 페이지
 ===================================================== */
 
+function updateTopNav(){
+
+    const nav =
+        document.getElementById("topNav");
+
+
+    if(!nav){
+
+        return;
+
+    }
+
+
+    /*
+    로그인한 뒤에는 위쪽 로그인·회원가입 버튼을 숨깁니다.
+    */
+
+    if(currentUser){
+
+        nav.classList.add("hidden");
+
+    }else{
+
+        nav.classList.remove("hidden");
+
+    }
+
+}
+
+
 function showPage(id){
+
+    updateTopNav();
+
 
     document
     .querySelectorAll(".page")
@@ -2768,6 +2982,13 @@ async function checkPassword(user,password){
 
 async function login(){
 
+    if(blockedByLock()){
+
+        return;
+
+    }
+
+
     const id =
         document.getElementById("loginId")
         .value.trim();
@@ -2845,6 +3066,7 @@ async function login(){
     }
 
 
+
     const candidates =
         users.filter(function(u){
 
@@ -2908,6 +3130,8 @@ async function login(){
 
 
     currentUser = user;
+
+    updateTopNav();
 
     scheduleViewKey =
         createClassKey(
@@ -3182,6 +3406,8 @@ function logout(){
 
     scheduleViewKey=null;
 
+    updateTopNav();
+
 
     document.getElementById("loginId").value="";
     document.getElementById("loginPw").value="";
@@ -3228,32 +3454,9 @@ function loadProfile(){
         resetArea.classList.remove("hidden");
 
 
-        const hint =
-            document.getElementById("resetPwHint");
-
-
-        if(hint){
-
-            hint.textContent =
-                "초기화 전용 비밀번호: " + RESET_PASSWORD;
-
-        }
-
-
     }else{
 
         resetArea.classList.add("hidden");
-
-
-        const hint =
-            document.getElementById("resetPwHint");
-
-
-        if(hint){
-
-            hint.textContent="";
-
-        }
 
 
         const resetInput =
@@ -3626,7 +3829,10 @@ const exactWords = [
     "통구이 드립","홍어 드립","틀딱","틀니딱딱",
     "파쇼","폐급","폐녀자","피싸개",
     "허세충","호랑말코","호로자식","호로새끼","후레자식",
-    "화냥년","후빨","후장빨개","흑돼지 같","열폭","페도"
+    "화냥년","후빨","후장빨개","흑돼지 같","열폭","페도",
+
+    /* 손가락 욕 기호 */
+    "ㅗㅗ","凸","🖕","ㅗ먹어","ㅗ나","엿ㅗ"
 
 ];
 
@@ -3722,6 +3928,16 @@ const contextWords = [
         word:"대가리",
         allowBefore:/(물고기|생선|닭|소|돼지|새|뱀|멸치|고등어|갈치)\s*$/,
         allowAfter:null
+    },
+
+    {
+        /*
+        손가락 욕으로 쓰는 ㅗ 를 막습니다.
+        모음을 나열하는 경우(ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ)는 통과시킵니다.
+        */
+        word:"ㅗ",
+        allowBefore:/[ㅏㅑㅓㅕㅐㅒㅔㅖㅛㅜㅠㅡㅣ]\s*$/,
+        allowAfter:/^\s*[ㅛㅜㅠㅡㅣㅏㅑㅓㅕ]/
     },
 
     {
@@ -4253,7 +4469,14 @@ function findBannedWord(text){
 전체 채팅 전송
 ===================================================== */
 
-function sendChat(){
+async function sendChat(){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
 
     if(!currentUser){
 
@@ -4298,24 +4521,42 @@ function sendChat(){
     }
 
 
-    chats.push({
+    const message = {
 
-        userKey:
-            createUserKey(currentUser),
+        id:makeMessageId(),
 
-        name:
-            currentUser.name,
+        name:currentUser.name,
 
-        role:
-            currentUser.role,
+        role:currentUser.role,
 
-        text:
-            text,
+        text:text,
 
-        time:
-            new Date().toLocaleString()
+        time:new Date().toLocaleString(),
 
-    });
+        createdAt:Date.now()
+
+    };
+
+
+    input.value="";
+
+
+    if(onlineMode === "firebase"){
+
+        const sent =
+            await pushOnline("chats",message);
+
+
+        if(sent){
+
+            return;
+
+        }
+
+    }
+
+
+    chats.push(message);
 
 
     if(chats.length > 300){
@@ -4332,9 +4573,15 @@ function sendChat(){
     );
 
 
-    input.value="";
-
     loadChat();
+
+
+    /*
+    공용 서버로 연결된 경우
+    같은 사이트를 보고 있는 사람에게 전달합니다.
+    */
+
+    broadcastChats();
 
 }
 
@@ -4357,6 +4604,9 @@ function chatEnter(event){
 ===================================================== */
 
 function loadChat(){
+
+    setOnlineBadge();
+
 
     const box =
         document.getElementById("chatMessages");
@@ -4427,13 +4677,1425 @@ function loadChat(){
 
 
 /* =====================================================
+이용 시간 제한
+
+한국 시각으로 저녁 8시가 되면 잠깁니다.
+아침 6시에 다시 열립니다.
+
+시간을 바꾸시려면 아래 두 숫자만 고치면 됩니다.
+LOCK_START_HOUR 는 잠기는 시각,
+LOCK_END_HOUR 는 열리는 시각입니다.
+
+기기의 시간대 설정과 상관없이
+항상 한국 시각을 기준으로 계산합니다.
+===================================================== */
+
+const LOCK_START_HOUR = 20;
+
+const LOCK_END_HOUR = 6;
+
+
+function kstNow(){
+
+    const now =
+        new Date();
+
+
+    /*
+    기기 시간대를 한국 시각으로 옮깁니다.
+    */
+
+    return new Date(
+        now.getTime() +
+        (now.getTimezoneOffset() + 9 * 60) * 60000
+    );
+
+}
+
+
+function isLockedHour(hour){
+
+    /*
+    밤 8시부터 다음 날 아침 6시까지 잠급니다.
+    */
+
+    if(LOCK_START_HOUR > LOCK_END_HOUR){
+
+        return(
+            hour >= LOCK_START_HOUR ||
+            hour < LOCK_END_HOUR
+        );
+
+    }
+
+
+    return(
+        hour >= LOCK_START_HOUR &&
+        hour < LOCK_END_HOUR
+    );
+
+}
+
+
+function isLockedNow(){
+
+    return isLockedHour(
+        kstNow().getHours()
+    );
+
+}
+
+
+function twoDigits(value){
+
+    return String(value).padStart(2,"0");
+
+}
+
+
+function updateLockScreen(){
+
+    const overlay =
+        document.getElementById("lockOverlay");
+
+    const clock =
+        document.getElementById("lockClock");
+
+    const text =
+        document.getElementById("lockText");
+
+
+    if(!overlay || !clock || !text){
+
+        return;
+
+    }
+
+
+    const now =
+        kstNow();
+
+
+    if(!isLockedNow()){
+
+        overlay.classList.remove("show");
+
+        return;
+
+    }
+
+
+    clock.textContent =
+        twoDigits(now.getHours()) +
+        ":" +
+        twoDigits(now.getMinutes());
+
+
+    text.innerHTML =
+        "한국 시각 " + LOCK_START_HOUR + "시부터 " +
+        LOCK_END_HOUR + "시까지는 사용할 수 없습니다." +
+        "<br>아침 " + LOCK_END_HOUR + "시에 다시 열립니다." +
+        "<br><br>지금까지 쓴 글은 그대로 남아 있습니다.";
+
+
+    overlay.classList.add("show");
+
+}
+
+
+/* =====================================================
+같은 브라우저의 다른 탭 반영
+
+서버 연결과 별개로,
+같은 컴퓨터에서 창을 두 개 열었을 때도
+한쪽에서 쓴 글이 다른 쪽에 바로 보이게 합니다.
+===================================================== */
+
+function watchOtherTabs(){
+
+    window.addEventListener("storage",function(event){
+
+        if(!event || !event.key){
+
+            return;
+
+        }
+
+
+        try{
+
+            if(event.key === STORAGE.chats){
+
+                chats = JSON.parse(event.newValue || "[]");
+
+                loadChat();
+
+            }
+
+
+            if(event.key === STORAGE.inquiries){
+
+                inquiries = JSON.parse(event.newValue || "[]");
+
+                loadInquiries();
+
+            }
+
+
+            if(event.key === STORAGE.roomChats){
+
+                roomChats = JSON.parse(event.newValue || "{}");
+
+                loadRoomChat();
+
+            }
+
+        }catch(error){
+
+            console.error(error);
+
+        }
+
+    });
+
+}
+
+
+function startLockWatch(){
+
+    updateLockScreen();
+
+
+    /*
+    자정이나 정각을 넘길 때 바로 잠기도록
+    20초마다 확인합니다.
+    */
+
+    setInterval(updateLockScreen,20000);
+
+}
+
+
+function blockedByLock(){
+
+    if(isLockedNow()){
+
+        updateLockScreen();
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+온라인 연결
+
+파이어베이스 모듈을 주소에서 직접 불러옵니다.
+설정값이 없거나 연결에 실패하면
+조용히 이 기기 저장 방식으로 되돌아갑니다.
+===================================================== */
+
+function isOnlineConfigured(){
+
+    return Boolean(
+        FIREBASE_CONFIG &&
+        FIREBASE_CONFIG.projectId &&
+        FIREBASE_CONFIG.apiKey
+    );
+
+}
+
+
+function makeMessageId(){
+
+    return(
+        Date.now().toString(36) +
+        "-" +
+        Math.random().toString(36).slice(2,8)
+    );
+
+}
+
+
+function setOnlineBadge(){
+
+    const targets = [
+        "chatOnlineState",
+        "roomOnlineState",
+        "inquiryOnlineState"
+    ];
+
+
+    let html = "";
+
+
+    if(onlineMode === "firebase"){
+
+        html = `
+
+        <div class="notice">
+        🌐 온라인 연결됨 (파이어베이스)
+        <br>
+        휴대폰, 컴퓨터 상관없이 같은 사이트를 연 사람과
+        글이 함께 보입니다.
+        </div>
+
+        `;
+
+    }else if(onlineMode === "relay"){
+
+        html = `
+
+        <div class="notice">
+        🌐 온라인 연결됨 (${escapeHTML(relayServer)})
+        <br>
+        휴대폰, 컴퓨터 상관없이 같은 사이트를 연 사람과
+        글이 함께 보입니다.
+        </div>
+
+        <div class="warning">
+        지금은 누구나 쓸 수 있는 공용 서버를 쓰고 있습니다.
+        주소를 아는 사람은 대화를 볼 수 있습니다.
+        이름, 전화번호, 비밀 이야기는 적지 마세요.
+        </div>
+
+        `;
+
+    }else{
+
+        html = `
+
+        <div class="notice dangerNotice">
+        온라인 연결이 안 되어 있습니다.
+        지금 쓴 글은 이 기기에만 저장됩니다.
+        <br><br>
+        상태: ${escapeHTML(relayStatus)}
+        <br>
+        버전: ${escapeHTML(BUILD_ID)}
+        <br>
+        <button
+        class="btn gray"
+        style="margin-top:10px;"
+        onclick="retryOnline()"
+        >
+        🔄 다시 연결해 보기
+        </button>
+        </div>
+
+        `;
+
+    }
+
+
+    targets.forEach(function(id){
+
+        const box =
+            document.getElementById(id);
+
+
+        if(box){
+
+            box.innerHTML = html;
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+온라인 연결 시작
+
+파이어베이스 설정값이 있으면 그쪽을 씁니다.
+없으면 공개 중계 서버로 연결합니다.
+===================================================== */
+
+async function initOnline(){
+
+    if(isOnlineConfigured()){
+
+        relayStatus = "파이어베이스에 연결하는 중";
+
+        setOnlineBadge();
+
+
+        await initFirebase();
+
+
+        if(onlineMode === "firebase"){
+
+            setOnlineBadge();
+
+            return;
+
+        }
+
+    }
+
+
+    const firebaseNote =
+        isOnlineConfigured()
+            ? relayStatus + " / "
+            : "";
+
+
+    await initRelay();
+
+
+    if(onlineMode !== "relay"){
+
+        relayStatus = firebaseNote + relayStatus;
+
+    }
+
+
+    setOnlineBadge();
+
+}
+
+
+async function initFirebase(){
+
+    /*
+    예전 방식(compat) 스크립트를 씁니다.
+    최신 모듈 방식은 파일을 직접 열었을 때
+    브라우저가 차단하는 경우가 있습니다.
+    */
+
+    const base =
+        "https://www.gstatic.com/firebasejs/" +
+        FIREBASE_VERSION +
+        "/";
+
+
+    try{
+
+        if(!window.firebase){
+
+            await loadScriptOnce(base + "firebase-app-compat.js");
+
+        }
+
+
+        if(!window.firebase){
+
+            relayStatus =
+                "파이어베이스 파일을 받지 못했습니다.";
+
+            return;
+
+        }
+
+
+        if(
+            !window.firebase.firestore
+        ){
+
+            await loadScriptOnce(base + "firebase-firestore-compat.js");
+
+        }
+
+
+        if(!window.firebase.firestore){
+
+            relayStatus =
+                "파이어베이스 저장소 파일을 받지 못했습니다.";
+
+            return;
+
+        }
+
+
+        const app =
+            window.firebase.apps && window.firebase.apps.length
+                ? window.firebase.app()
+                : window.firebase.initializeApp(FIREBASE_CONFIG);
+
+
+        fb = {
+
+            db: window.firebase.firestore(app)
+
+        };
+
+
+        onlineReady = true;
+
+        onlineMode = "firebase";
+
+        relayServer = "firebase";
+
+        relayStatus = "연결됨";
+
+
+        subscribeChat();
+
+        subscribeInquiries();
+
+
+        showToast(
+            "온라인으로 연결되었습니다.\n" +
+            "다른 기기와 글을 주고받을 수 있습니다."
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        onlineReady = false;
+
+        onlineMode = null;
+
+        relayStatus =
+            "파이어베이스 연결 실패 (" +
+            (error && error.message ? error.message : "원인 불명") +
+            "). 공용 서버로 다시 시도합니다.";
+
+    }
+
+}
+
+
+function sortByTime(list){
+
+    return list.sort(function(a,b){
+
+        return(
+            Number(a.createdAt || 0) -
+            Number(b.createdAt || 0)
+        );
+
+    });
+
+}
+
+
+function subscribeChat(){
+
+    fb.db.collection("chats")
+        .orderBy("createdAt","asc")
+        .limit(300)
+        .onSnapshot(function(snapshot){
+
+            chats =
+                snapshot.docs.map(function(item){
+
+                    return item.data();
+
+                });
+
+
+            loadChat();
+
+        },function(error){
+
+            console.error(error);
+
+        });
+
+}
+
+
+function subscribeInquiries(){
+
+    fb.db.collection("inquiries")
+        .orderBy("createdAt","asc")
+        .limit(300)
+        .onSnapshot(function(snapshot){
+
+            inquiries =
+                snapshot.docs.map(function(item){
+
+                    return item.data();
+
+                });
+
+
+            loadInquiries();
+
+        },function(error){
+
+            console.error(error);
+
+        });
+
+}
+
+
+function subscribeRoomChat(roomId){
+
+    if(roomUnsubscribe){
+
+        roomUnsubscribe();
+
+        roomUnsubscribe = null;
+
+    }
+
+
+    if(onlineMode !== "firebase" || !roomId){
+
+        return;
+
+    }
+
+
+    /*
+    반 번호로 걸러낸 뒤 시간 순서는 화면에서 정리합니다.
+    이렇게 하면 색인을 따로 만들지 않아도 됩니다.
+    */
+
+    roomUnsubscribe =
+        fb.db.collection("roomChats")
+            .where("roomId","==",roomId)
+            .limit(300)
+            .onSnapshot(function(snapshot){
+
+                roomChats[roomId] =
+                    sortByTime(
+                        snapshot.docs.map(function(item){
+
+                            return item.data();
+
+                        })
+                    );
+
+
+                loadRoomChat();
+
+            },function(error){
+
+                console.error(error);
+
+            });
+
+}
+
+
+async function pushOnline(name,data){
+
+    if(onlineMode !== "firebase"){
+
+        return false;
+
+    }
+
+
+    try{
+
+        await fb.db.collection(name).add(data);
+
+        return true;
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "온라인 저장에 실패했습니다.\n" +
+            "이 기기에만 저장합니다."
+        );
+
+        return false;
+
+    }
+
+}
+
+
+async function clearOnlineCollection(name){
+
+    if(onlineMode !== "firebase"){
+
+        return;
+
+    }
+
+
+    try{
+
+        const snapshot =
+            await fb.db.collection(name).get();
+
+
+        for(const item of snapshot.docs){
+
+            await item.ref.delete();
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =====================================================
+공개 중계 서버 연결
+
+브라우저에서 바로 접속하는 방식입니다.
+마지막 글 묶음을 서버가 들고 있다가
+새로 들어온 사람에게 그대로 전달합니다.
+덕분에 늦게 들어와도 지난 대화가 보입니다.
+===================================================== */
+
+function loadScriptOnce(src){
+
+    return new Promise(function(resolve,reject){
+
+        const tag =
+            document.createElement("script");
+
+
+        tag.src = src;
+
+        tag.onload = resolve;
+
+        tag.onerror = reject;
+
+
+        document.head.appendChild(tag);
+
+    });
+
+}
+
+
+function relayTopic(name){
+
+    return RELAY_ROOT + "/" + name;
+
+}
+
+
+async function initRelay(){
+
+    relayStatus = "채팅 프로그램을 받는 중";
+
+    setOnlineBadge();
+
+
+    let loaded = Boolean(window.mqtt);
+
+
+    if(!loaded){
+
+        for(const src of RELAY_SCRIPTS){
+
+            try{
+
+                await loadScriptOnce(src);
+
+
+                if(window.mqtt){
+
+                    loaded = true;
+
+                    break;
+
+                }
+
+            }catch(error){
+
+                console.error("스크립트 실패",src,error);
+
+            }
+
+        }
+
+    }
+
+
+    if(!loaded || !window.mqtt){
+
+        onlineMode = null;
+
+        relayStatus =
+            "채팅 프로그램을 받지 못했습니다. " +
+            "인터넷이 막혀 있을 수 있습니다.";
+
+        setOnlineBadge();
+
+        return;
+
+    }
+
+
+    /*
+    서버 주소를 하나씩 시도합니다.
+    먼저 연결되는 곳을 씁니다.
+    */
+
+    const tried = [];
+
+
+    for(const url of RELAY_URLS){
+
+        const shortName =
+            url.split("//")[1];
+
+
+        relayStatus =
+            "서버에 접속하는 중 (" + shortName + ")";
+
+        setOnlineBadge();
+
+
+        const ok =
+            await tryRelayServer(url);
+
+
+        if(ok){
+
+            return;
+
+        }
+
+
+        tried.push(shortName);
+
+    }
+
+
+    onlineMode = null;
+
+    relayStatus =
+        "모든 서버 접속 실패. 시도한 곳: " +
+        tried.join(" / ");
+
+    setOnlineBadge();
+
+}
+
+
+function tryRelayServer(url){
+
+    return new Promise(function(resolve){
+
+        let settled = false;
+
+
+        let client = null;
+
+
+        try{
+
+            client =
+                window.mqtt.connect(url,{
+
+                    clientId:
+                        "geulbit-" +
+                        Math.random().toString(16).slice(2,10),
+
+                    clean:true,
+
+                    connectTimeout:6000,
+
+                    reconnectPeriod:0
+
+                });
+
+        }catch(error){
+
+            console.error(error);
+
+            resolve(false);
+
+            return;
+
+        }
+
+
+        const giveUp =
+            setTimeout(function(){
+
+                if(settled){
+
+                    return;
+
+                }
+
+
+                settled = true;
+
+
+                try{
+
+                    client.end(true);
+
+                }catch(error){
+
+                    console.error(error);
+
+                }
+
+
+                resolve(false);
+
+            },8000);
+
+
+        client.on("connect",function(){
+
+            if(settled){
+
+                return;
+
+            }
+
+
+            settled = true;
+
+            clearTimeout(giveUp);
+
+
+            relayClient = client;
+
+            onlineMode = "relay";
+
+            onlineReady = true;
+
+            relayServer = url.split("//")[1].split(":")[0];
+
+            relayStatus = "연결됨";
+
+
+            /*
+            연결이 끊기면 스스로 다시 붙습니다.
+            */
+
+            client.options.reconnectPeriod = 4000;
+
+
+            client.subscribe(relayTopic("chats"));
+
+            client.subscribe(relayTopic("inquiries"));
+
+            client.subscribe(relayTopic("rooms/+"));
+
+            client.subscribe(relayTopic("reset"));
+
+
+            client.on("message",function(topic,payload){
+
+                handleRelayMessage(
+                    String(topic),
+                    payload.toString()
+                );
+
+            });
+
+
+            client.on("close",function(){
+
+                if(onlineMode === "relay"){
+
+                    relayStatus = "연결이 끊겼습니다. 다시 연결하는 중";
+
+                    setOnlineBadge();
+
+                }
+
+            });
+
+
+            /*
+            내가 가진 글을 서버에 한 번 올려둡니다.
+            먼저 들어온 사람의 글이 서로 합쳐집니다.
+            */
+
+            broadcastChats();
+
+            broadcastInquiries();
+
+
+            setOnlineBadge();
+
+            showToast(
+                "온라인으로 연결되었습니다.\n" +
+                "다른 기기와 글을 주고받을 수 있습니다."
+            );
+
+
+            resolve(true);
+
+        });
+
+
+        client.on("error",function(error){
+
+            console.error("접속 실패",url,error);
+
+
+            if(settled){
+
+                return;
+
+            }
+
+
+            settled = true;
+
+            clearTimeout(giveUp);
+
+
+            try{
+
+                client.end(true);
+
+            }catch(inner){
+
+                console.error(inner);
+
+            }
+
+
+            resolve(false);
+
+        });
+
+    });
+
+}
+
+
+function retryOnline(){
+
+    if(onlineMode === "relay"){
+
+        showToast("이미 연결되어 있습니다.");
+
+        return;
+
+    }
+
+
+    initRelay();
+
+}
+
+
+/*
+받은 글과 내가 가진 글을 합칩니다.
+같은 글이 두 번 보이지 않도록
+글마다 붙은 번호로 걸러냅니다.
+*/
+
+function mergeMessages(mine,incoming){
+
+    const map = {};
+
+
+    [].concat(mine || [], incoming || [])
+    .forEach(function(item){
+
+        if(!item || !item.text){
+
+            return;
+
+        }
+
+
+        const key =
+            item.id ||
+            (item.name + "|" + item.text + "|" + item.createdAt);
+
+
+        map[key] = item;
+
+    });
+
+
+    return Object.values(map)
+        .sort(function(a,b){
+
+            return(
+                Number(a.createdAt || 0) -
+                Number(b.createdAt || 0)
+            );
+
+        })
+        .slice(-200);
+
+}
+
+
+function handleRelayMessage(topic,text){
+
+    let data = null;
+
+
+    try{
+
+        data = JSON.parse(text);
+
+    }catch(error){
+
+        return;
+
+    }
+
+
+    if(topic === relayTopic("reset")){
+
+        applyRemoteReset();
+
+        return;
+
+    }
+
+
+    if(!Array.isArray(data)){
+
+        return;
+
+    }
+
+
+    if(topic === relayTopic("chats")){
+
+        chats = mergeMessages(chats,data);
+
+        storageSet(STORAGE.chats,JSON.stringify(chats));
+
+        loadChat();
+
+        return;
+
+    }
+
+
+    if(topic === relayTopic("inquiries")){
+
+        inquiries = mergeMessages(inquiries,data);
+
+        storageSet(STORAGE.inquiries,JSON.stringify(inquiries));
+
+        loadInquiries();
+
+        return;
+
+    }
+
+
+    const roomPrefix =
+        relayTopic("rooms/");
+
+
+    if(topic.indexOf(roomPrefix) === 0){
+
+        const roomId =
+            topic.slice(roomPrefix.length);
+
+
+        roomChats[roomId] =
+            mergeMessages(roomChats[roomId],data);
+
+
+        storageSet(
+            STORAGE.roomChats,
+            JSON.stringify(roomChats)
+        );
+
+
+        if(roomId === currentRoomId){
+
+            loadRoomChat();
+
+        }
+
+        return;
+
+    }
+
+}
+
+
+/*
+서버가 마지막 묶음을 들고 있도록 보냅니다.
+retain 을 켜면 새로 들어온 사람에게도 전달됩니다.
+*/
+
+function relayPublish(name,items){
+
+    if(onlineMode !== "relay" || !relayClient){
+
+        return;
+
+    }
+
+
+    try{
+
+        relayClient.publish(
+            relayTopic(name),
+            JSON.stringify((items || []).slice(-100)),
+            { retain:true, qos:0 }
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+function broadcastChats(){
+
+    relayPublish("chats",chats);
+
+}
+
+
+function broadcastInquiries(){
+
+    relayPublish("inquiries",inquiries);
+
+}
+
+
+function broadcastRoomChat(roomId){
+
+    relayPublish(
+        "rooms/" + roomId,
+        roomChats[roomId]
+    );
+
+}
+
+
+/*
+전체 초기화를 다른 기기에도 알립니다.
+*/
+
+function broadcastReset(){
+
+    if(onlineMode !== "relay" || !relayClient){
+
+        return;
+
+    }
+
+
+    try{
+
+        relayPublish("chats",[]);
+
+        relayPublish("inquiries",[]);
+
+
+        Object.keys(roomChats).forEach(function(roomId){
+
+            relayPublish("rooms/" + roomId,[]);
+
+        });
+
+
+        relayClient.publish(
+            relayTopic("reset"),
+            JSON.stringify({ at:Date.now() }),
+            { retain:false, qos:0 }
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+function applyRemoteReset(){
+
+    chats = [];
+
+    inquiries = [];
+
+    roomChats = {};
+
+
+    storageSet(STORAGE.chats,JSON.stringify(chats));
+
+    storageSet(STORAGE.inquiries,JSON.stringify(inquiries));
+
+    storageSet(STORAGE.roomChats,JSON.stringify(roomChats));
+
+
+    loadChat();
+
+    loadInquiries();
+
+
+    showToast("관리자가 대화 내용을 모두 지웠습니다.");
+
+}
+
+
+/* =====================================================
+그림 아이콘
+
+급식과 시간표 옆에 간단한 그림을 붙입니다.
+바깥에서 이미지를 가져오지 않고
+코드 안에서 직접 그립니다.
+===================================================== */
+
+function svgWrap(inner){
+
+    return(
+        '<svg class="miniIcon" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="1.8" ' +
+        'stroke-linecap="round" stroke-linejoin="round">' +
+        inner +
+        '</svg>'
+    );
+
+}
+
+
+function subjectIcon(subject){
+
+    const name =
+        String(subject || "");
+
+
+    if(name.includes("국어")){
+
+        return svgWrap(
+            '<path d="M4 5h7v14H4z"/><path d="M13 5h7v14h-7z"/><path d="M11 5v14"/>'
+        );
+
+    }
+
+
+    if(name.includes("수학")){
+
+        return svgWrap(
+            '<path d="M4 7h8"/><path d="M8 3v8"/><path d="M14 17h6"/><path d="M15 13l4 8"/>'
+        );
+
+    }
+
+
+    if(
+        name.includes("과학") ||
+        name.includes("실험")
+    ){
+
+        return svgWrap(
+            '<path d="M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M9 3h6"/>'
+        );
+
+    }
+
+
+    if(name.includes("영어")){
+
+        return svgWrap(
+            '<path d="M4 19l6-14 6 14"/><path d="M6.5 14h7"/><path d="M18 9v10"/>'
+        );
+
+    }
+
+
+    if(
+        name.includes("체육") ||
+        name.includes("운동")
+    ){
+
+        return svgWrap(
+            '<circle cx="12" cy="12" r="8"/><path d="M4 12h16"/><path d="M12 4a12 12 0 0 0 0 16"/>'
+        );
+
+    }
+
+
+    if(name.includes("음악")){
+
+        return svgWrap(
+            '<circle cx="7" cy="18" r="3"/><path d="M10 18V5l9-2v13"/><circle cx="16" cy="16" r="3"/>'
+        );
+
+    }
+
+
+    if(
+        name.includes("미술") ||
+        name.includes("그림")
+    ){
+
+        return svgWrap(
+            '<path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h3a4 4 0 0 0 4-4 6 6 0 0 0-8-6z"/><circle cx="8" cy="10" r="1"/>'
+        );
+
+    }
+
+
+    if(
+        name.includes("사회") ||
+        name.includes("역사")
+    ){
+
+        return svgWrap(
+            '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/>'
+        );
+
+    }
+
+
+    if(name.includes("등록 없음")){
+
+        return svgWrap(
+            '<circle cx="12" cy="12" r="9"/><path d="M9 12h6"/>'
+        );
+
+    }
+
+
+    return svgWrap(
+        '<path d="M5 4h14v16H5z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M8 16h5"/>'
+    );
+
+}
+
+
+function mealIcon(){
+
+    return svgWrap(
+        '<path d="M3 15h18a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/>' +
+        '<path d="M7 12a5 5 0 0 1 10 0"/>' +
+        '<path d="M12 4v3"/>'
+    );
+
+}
+
+
+/* =====================================================
 문의사항
 
 전체 채팅과 같은 구조입니다.
 누가 남겼는지 이름과 역할이 함께 남습니다.
 ===================================================== */
 
-function sendInquiry(){
+async function sendInquiry(){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
 
     if(!currentUser){
 
@@ -4472,9 +6134,9 @@ function sendInquiry(){
     }
 
 
-    inquiries.push({
+    const message = {
 
-        userKey:createUserKey(currentUser),
+        id:makeMessageId(),
 
         name:currentUser.name,
 
@@ -4482,9 +6144,34 @@ function sendInquiry(){
 
         text:text,
 
-        time:new Date().toLocaleString()
+        time:new Date().toLocaleString(),
 
-    });
+        createdAt:Date.now()
+
+    };
+
+
+    input.value="";
+
+
+    if(onlineMode === "firebase"){
+
+        const sent =
+            await pushOnline("inquiries",message);
+
+
+        if(sent){
+
+            showToast("문의사항이 등록되었습니다.");
+
+            return;
+
+        }
+
+    }
+
+
+    inquiries.push(message);
 
 
     if(inquiries.length > 300){
@@ -4500,9 +6187,9 @@ function sendInquiry(){
     );
 
 
-    input.value="";
-
     loadInquiries();
+
+    broadcastInquiries();
 
     showToast("문의사항이 등록되었습니다.");
 
@@ -4523,6 +6210,9 @@ function inquiryEnter(event){
 
 
 function loadInquiries(){
+
+    setOnlineBadge();
+
 
     const box =
         document.getElementById("inquiryMessages");
@@ -5105,6 +6795,9 @@ function enterRoom(roomId){
         room.id;
 
 
+    subscribeRoomChat(room.id);
+
+
     openRoomPage("roomDashboardPage");
 
 }
@@ -5188,6 +6881,15 @@ function openRoomPage(id){
 
 
 function leaveRoom(){
+
+    if(roomUnsubscribe){
+
+        roomUnsubscribe();
+
+        roomUnsubscribe=null;
+
+    }
+
 
     currentRoomId=null;
 
@@ -5323,6 +7025,13 @@ function loadRoomDashboard(){
 ===================================================== */
 
 function addRoomNotice(){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
 
     if(!canManageRoomContent()){
 
@@ -6061,10 +7770,17 @@ function loadRoomSchedule(){
 
         for(let i=0; i<5; i++){
 
+            const subject =
+                data[i] || "등록 없음";
+
+
             rows += `
             <tr>
             <td>${i+1}교시</td>
-            <td>${escapeHTML(data[i] || "등록 없음")}</td>
+            <td style="text-align:left;">
+            ${subjectIcon(subject)}
+            ${escapeHTML(subject)}
+            </td>
             </tr>`;
 
         }
@@ -6145,6 +7861,9 @@ function loadRoomHeader(){
 ===================================================== */
 
 function loadRoomChat(){
+
+    setOnlineBadge();
+
 
     const box =
         document.getElementById("roomMessages");
@@ -6264,7 +7983,14 @@ function loadRoomChat(){
 단체방 채팅 전송
 ===================================================== */
 
-function sendRoomChat(){
+async function sendRoomChat(){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
 
     if(!currentUser){
 
@@ -6341,24 +8067,44 @@ function sendRoomChat(){
     }
 
 
-    roomChats[currentRoomId].push({
+    const message = {
 
-        userKey:
-            createUserKey(currentUser),
+        id:makeMessageId(),
 
-        name:
-            currentUser.name,
+        roomId:currentRoomId,
 
-        role:
-            currentUser.role,
+        name:currentUser.name,
 
-        text:
-            text,
+        role:currentUser.role,
 
-        time:
-            new Date().toLocaleString()
+        text:text,
 
-    });
+        time:new Date().toLocaleString(),
+
+        createdAt:Date.now()
+
+    };
+
+
+    input.value="";
+
+
+    if(onlineMode === "firebase"){
+
+        const sent =
+            await pushOnline("roomChats",message);
+
+
+        if(sent){
+
+            return;
+
+        }
+
+    }
+
+
+    roomChats[currentRoomId].push(message);
 
 
     if(roomChats[currentRoomId].length > 300){
@@ -6375,10 +8121,10 @@ function sendRoomChat(){
     );
 
 
-    input.value="";
-
-
     loadRoomChat();
+
+
+    broadcastRoomChat(currentRoomId);
 
 }
 
@@ -6454,6 +8200,13 @@ function updateSchoolContentPermissions(){
 ===================================================== */
 
 function addNotice(){
+
+    if(blockedByLock()){
+
+        return;
+
+    }
+
 
     if(!canManageSchoolContent()){
 
@@ -7130,8 +8883,13 @@ function loadMeal(){
 
         <div class="item">
 
-        <h3>
-        📅 ${escapeHTML(targetDate)}
+        <div class="mealHead">
+        ${mealIcon()}
+        ${escapeHTML(targetDate)} 급식
+        </div>
+
+        <h3 class="hidden">
+        ${escapeHTML(targetDate)}
         </h3>
 
         <p style="white-space:pre-line;">
@@ -7201,9 +8959,10 @@ function loadMeal(){
 
         <div class="item">
 
-        <h3>
-        📅 ${escapeHTML(date)}
-        </h3>
+        <div class="mealHead">
+        ${mealIcon()}
+        ${escapeHTML(date)}
+        </div>
 
         <p style="white-space:pre-line;">
 
@@ -7548,11 +9307,18 @@ function loadSchedules(){
 
         for(let i=0; i<5; i++){
 
+            const subject =
+                data[i] || "등록 없음";
+
+
             rows += `
 
             <tr>
             <td>${i+1}교시</td>
-            <td>${escapeHTML(data[i] || "등록 없음")}</td>
+            <td style="text-align:left;">
+            ${subjectIcon(subject)}
+            ${escapeHTML(subject)}
+            </td>
             </tr>
 
             `;
@@ -7828,7 +9594,7 @@ let resetArmed = false;
 let resetArmTimer = null;
 
 
-function resetAllData(){
+async function resetAllData(){
 
     if(!canManageSchoolContent()){
 
@@ -7897,6 +9663,34 @@ function resetAllData(){
     clearTimeout(resetArmTimer);
 
 
+    /*
+    온라인에 저장된 글도 함께 지웁니다.
+    양이 많으면 몇 초 걸릴 수 있습니다.
+    */
+
+    if(onlineMode === "firebase"){
+
+        showToast("온라인 데이터를 지우는 중입니다...");
+
+
+        await clearOnlineCollection("chats");
+
+        await clearOnlineCollection("roomChats");
+
+        await clearOnlineCollection("inquiries");
+
+    }
+
+
+    if(onlineMode === "relay"){
+
+        showToast("온라인 데이터를 지우는 중입니다...");
+
+        broadcastReset();
+
+    }
+
+
     Object.values(STORAGE)
     .forEach(function(key){
 
@@ -7955,6 +9749,17 @@ function resetAllData(){
 
 function initialize(){
 
+    const buildTag =
+        document.getElementById("buildTag");
+
+
+    if(buildTag){
+
+        buildTag.textContent = "v" + BUILD_ID;
+
+    }
+
+
     if(!storageAvailable){
 
         showStorageBanner();
@@ -7981,7 +9786,15 @@ function initialize(){
 
     showPage("signupPage");
 
+    updateTopNav();
+
     initBetaNotice();
+
+    initOnline();
+
+    startLockWatch();
+
+    watchOtherTabs();
 
 }
 
