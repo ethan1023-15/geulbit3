@@ -2013,7 +2013,7 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-17";
+const BUILD_ID = "2026-08-30-18";
 
 
 const MANAGER_PASSWORD = "2023";
@@ -5006,9 +5006,15 @@ function canDeleteMessages(){
     }
 
 
+    /*
+    선생님, 학생회, 관리자가 글을 지울 수 있습니다.
+    글 자체는 지우기 전까지 계속 남습니다.
+    */
+
     return(
         superMode ||
         currentUser.role === "teacher" ||
+        currentUser.role === "council" ||
         currentUser.role === "admin"
     );
 
@@ -7163,7 +7169,190 @@ function mealIcon(){
 작성자, 제목, 내용, 답글 순서입니다.
 ===================================================== */
 
-function renderPostCard(item,replies,replyHandler,accent){
+/* =====================================================
+글 삭제
+
+선생님, 학생회, 관리자만 지울 수 있습니다.
+글에 달린 답글도 함께 사라집니다.
+===================================================== */
+
+async function removePost(config){
+
+    if(!canDeleteMessages()){
+
+        showToast(
+            "선생님, 학생회, 관리자만 지울 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    config.removeLocal();
+
+
+    storageSet(
+        config.storeKey,
+        JSON.stringify(config.storeValue())
+    );
+
+
+    if(config.replyStoreKey){
+
+        storageSet(
+            config.replyStoreKey,
+            JSON.stringify(config.replyStoreValue())
+        );
+
+    }
+
+
+    config.refresh();
+
+
+    await removeOnlineDoc(
+        config.collectionName,
+        config.postId
+    );
+
+
+    showToast("글을 지웠습니다.");
+
+}
+
+
+async function deleteNoticePost(postId){
+
+    await removePost({
+
+        postId:postId,
+
+        collectionName:"notices",
+
+        storeKey:STORAGE.notices,
+
+        replyStoreKey:STORAGE.noticeReplies,
+
+        removeLocal:function(){
+
+            notices =
+                notices.filter(function(item){
+
+                    return item.id !== postId;
+
+                });
+
+
+            noticeReplies =
+                noticeReplies.filter(function(item){
+
+                    return item.postId !== postId;
+
+                });
+
+        },
+
+        storeValue:function(){ return notices; },
+
+        replyStoreValue:function(){ return noticeReplies; },
+
+        refresh:loadNotices
+
+    });
+
+}
+
+
+async function deleteRoomNoticePost(postId){
+
+    await removePost({
+
+        postId:postId,
+
+        collectionName:"roomNotices",
+
+        storeKey:STORAGE.roomNotices,
+
+        replyStoreKey:STORAGE.roomNoticeReplies,
+
+        removeLocal:function(){
+
+            if(Array.isArray(roomNotices[currentRoomId])){
+
+                roomNotices[currentRoomId] =
+                    roomNotices[currentRoomId].filter(function(item){
+
+                        return item.id !== postId;
+
+                    });
+
+            }
+
+
+            roomNoticeReplies =
+                roomNoticeReplies.filter(function(item){
+
+                    return item.postId !== postId;
+
+                });
+
+        },
+
+        storeValue:function(){ return roomNotices; },
+
+        replyStoreValue:function(){ return roomNoticeReplies; },
+
+        refresh:loadRoomNotices
+
+    });
+
+}
+
+
+async function deleteInquiryPost(postId){
+
+    await removePost({
+
+        postId:postId,
+
+        collectionName:"inquiries",
+
+        storeKey:STORAGE.inquiries,
+
+        replyStoreKey:STORAGE.inquiryReplies,
+
+        removeLocal:function(){
+
+            inquiries =
+                inquiries.filter(function(item){
+
+                    return item.id !== postId;
+
+                });
+
+
+            inquiryReplies =
+                inquiryReplies.filter(function(item){
+
+                    return item.postId !== postId;
+
+                });
+
+        },
+
+        storeValue:function(){ return inquiries; },
+
+        replyStoreValue:function(){ return inquiryReplies; },
+
+        refresh:loadInquiries
+
+    });
+
+}
+
+
+function renderPostCard(item,replies,replyHandler,accent,deleteHandler){
 
     const postId =
         item.id || "";
@@ -7246,6 +7435,12 @@ function renderPostCard(item,replies,replyHandler,accent){
     </button>
 
     </div>
+
+    ${
+        deleteHandler
+            ? deleteButton(deleteHandler,postId)
+            : ""
+    }
 
     </div>
 
@@ -7858,6 +8053,8 @@ function loadInquiries(){
         </button>
 
         </div>
+
+        ${deleteButton("deleteInquiryPost",inquiryId)}
 
         </div>
 
@@ -8887,7 +9084,8 @@ function loadRoomNotices(){
                 item,
                 pickReplies(roomNoticeReplies,item.id || ""),
                 "replyToRoomNotice",
-                "purple"
+                "purple",
+                "deleteRoomNoticePost"
             );
 
     });
@@ -10139,7 +10337,8 @@ function loadNotices(){
                 item,
                 pickReplies(noticeReplies,item.id || ""),
                 "replyToNotice",
-                "gray"
+                "gray",
+                "deleteNoticePost"
             );
 
     });
