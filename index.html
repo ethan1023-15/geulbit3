@@ -1019,7 +1019,7 @@ placeholder="① 특수 관리자 비밀번호"
 
 </div>
 
-<div id="loginManagerBox" class="hidden">
+<div id="loginManagerBox">
 
 <input
 id="managerPw"
@@ -1028,7 +1028,7 @@ placeholder="관리자 비밀번호"
 >
 
 <p class="info">
-선생님·학생회 계정만 입력합니다.
+로그인하려면 모두 관리자 비밀번호를 입력해야 합니다.
 비밀번호는 학교에서 따로 안내받습니다.
 </p>
 
@@ -2013,7 +2013,7 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-14";
+const BUILD_ID = "2026-08-30-17";
 
 
 const MANAGER_PASSWORD = "2023";
@@ -2864,15 +2864,11 @@ function loginRoleChanged(){
     }
 
 
-    if(role === "student"){
+    /*
+    로그인은 누구나 관리자 비밀번호가 필요합니다.
+    */
 
-        managerBox.classList.add("hidden");
-
-    }else{
-
-        managerBox.classList.remove("hidden");
-
-    }
+    managerBox.classList.remove("hidden");
 
 
     if(role === "admin"){
@@ -3282,17 +3278,18 @@ async function login(){
     }
 
 
-    if(role !== "student"){
+    /*
+    학생을 포함한 모든 사람이
+    관리자 비밀번호를 넣어야 로그인됩니다.
+    */
 
-        if(manager !== MANAGER_PASSWORD){
+    if(manager !== MANAGER_PASSWORD){
 
-            showToast(
-                "관리자 비밀번호가 맞지 않습니다."
-            );
+        showToast(
+            "관리자 비밀번호가 맞지 않습니다."
+        );
 
-            return;
-
-        }
+        return;
 
     }
 
@@ -4127,7 +4124,7 @@ const exactWords = [
     "급식충","김치녀","개판이","개똥","똥개",
 
     /* ㄴ */
-    "남창","냄져","네 다음","ㄴㄷㅆ","연놈","논다니","뇌절",
+    "남창","냄져","네 다음 씹","네다음","ㄴㄷㅆ","연놈","논다니","뇌절",
     "눈 깔아","니미럴","니미뽕","니기미","나가 죽어","나가 뒈져","노괴",
 
     /* ㄷ */
@@ -4185,7 +4182,37 @@ const exactWords = [
 
     /* 시비 거는 표현 */
     "꼬우면","꼬으면","꼬왔","꼬우냐","꼬우니","꼬웠",
-    "꼬우면 나가","꼬으면 나가","나가라고","나가 죽","나가뒤"
+    "꼬우면 나가","꼬으면 나가","나가라고","나가 죽","나가뒤",
+
+    /* 추가 목록 */
+    "간새","쌍간나","종간나","좆간나","개간나",
+    "개색","개좆같","개똥같","똥쓰레기","똥컴",
+    "돼새","메퇘지","멧돼지새끼","흑돼지새끼",
+    "씨빨놈","씨빨년","씹못할","씹할년","씹할놈",
+    "좆나","좆같다","좆같은","좆도 아닌","좆만한",
+    "니미할","지미랄","제미랄","아닥해","아닥","빡통",
+    "뒈질놈","뒈질년","애미 뒈","애비 뒈","뒈지고",
+    "빠돼쌍","비틱","삐꾸났","솔개새끼","쇠똥구리 같",
+    "좌좀","우좀","별창","후장빨개","씹치녀",
+    "네 다음 씹","네다음",
+    "눈 깔","짜져","째져","꼬라봐","꼬라보",
+    "당나귀 사촌","말하는 가축","부모가 홀","경을 칠",
+    "장뚜룸","두루애","귓것","새쓰개","몽근놈",
+    "찌랭이","찐찌버거","빡추","똘추","똘게이",
+    "허세충","오유충","렉카충","맘충","급식충","설명충",
+    "일베충","한남충","한녀충","애비충","무뇌충","똥꼬충",
+
+    /* 추가 목록 2 */
+    "간나새끼","견공자제","그지 깽깽이","니미 씨발","놈의 자식",
+    "무뇌봉","옌장칠","옌장맞을","딸딸이대","통구이드립","홍어드립",
+    "조까","존나게","졸라게","쳐죽","처죽","뒤져라","뒈져라",
+    "꺼지라고","닥치라고","박쥐같은","박쥐짓","짱께","짱꼴",
+    "쪽바리","반쪽바리","니그로","깜디","엠생","틀튜브",
+    "쇠스케","쌔쓰개","씹하다","좆빨","보빨","후빨러","육변기",
+    "빠구리","화냥년","양공주","석녀","남창","논다니","냄져",
+    "보전깨","보슬","상폐녀","광년이","노괴","여편네","떨거지",
+    "따까리","꼬붕","땡중","땡추","먹사","어저미","언년이",
+    "덜떨어","땅딸보","호랑말코","코흘리개","불한당","수전노"
 
 ];
 
@@ -4963,6 +4990,199 @@ function chatEnter(event){
 
 
 /* =====================================================
+메시지 삭제
+
+선생님과 관리자만 지울 수 있습니다.
+온라인에 저장된 글이면 서버에서도 지워져
+모든 사람 화면에서 사라집니다.
+===================================================== */
+
+function canDeleteMessages(){
+
+    if(!currentUser){
+
+        return false;
+
+    }
+
+
+    return(
+        superMode ||
+        currentUser.role === "teacher" ||
+        currentUser.role === "admin"
+    );
+
+}
+
+
+function deleteButton(handlerName,key){
+
+    if(!canDeleteMessages() || !key){
+
+        return "";
+
+    }
+
+
+    return `
+
+    <button
+    class="btn red"
+    style="margin-top:8px;padding:6px;font-size:13px;"
+    onclick="${handlerName}('${escapeJS(key)}')"
+    >
+    🗑 삭제
+    </button>
+
+    `;
+
+}
+
+
+async function removeOnlineDoc(collectionName,docId){
+
+    if(onlineMode !== "firebase" || !docId){
+
+        return;
+
+    }
+
+
+    try{
+
+        await fb.db
+            .collection(collectionName)
+            .doc(docId)
+            .delete();
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast("삭제에 실패했습니다.");
+
+    }
+
+}
+
+
+async function deleteChat(key){
+
+    if(!canDeleteMessages()){
+
+        showToast(
+            "선생님과 관리자만 지울 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const target =
+        chats.find(function(item){
+
+            return(
+                item.docId === key ||
+                item.id === key
+            );
+
+        });
+
+
+    if(target && target.docId){
+
+        await removeOnlineDoc("chats",target.docId);
+
+    }
+
+
+    chats =
+        chats.filter(function(item){
+
+            return(
+                item.docId !== key &&
+                item.id !== key
+            );
+
+        });
+
+
+    storageSet(STORAGE.chats,JSON.stringify(chats));
+
+    loadChat();
+
+    broadcastChats();
+
+    showToast("메시지를 지웠습니다.");
+
+}
+
+
+async function deleteRoomChat(key){
+
+    if(!canDeleteMessages()){
+
+        showToast(
+            "선생님과 관리자만 지울 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const list =
+        Array.isArray(roomChats[currentRoomId])
+            ? roomChats[currentRoomId]
+            : [];
+
+
+    const target =
+        list.find(function(item){
+
+            return(
+                item.docId === key ||
+                item.id === key
+            );
+
+        });
+
+
+    if(target && target.docId){
+
+        await removeOnlineDoc("roomChats",target.docId);
+
+    }
+
+
+    roomChats[currentRoomId] =
+        list.filter(function(item){
+
+            return(
+                item.docId !== key &&
+                item.id !== key
+            );
+
+        });
+
+
+    storageSet(
+        STORAGE.roomChats,
+        JSON.stringify(roomChats)
+    );
+
+
+    loadRoomChat();
+
+    broadcastRoomChat(currentRoomId);
+
+    showToast("메시지를 지웠습니다.");
+
+}
+
+
+/* =====================================================
 전체 채팅 불러오기
 ===================================================== */
 
@@ -5025,6 +5245,8 @@ function loadChat(){
         ${escapeHTML(chat.time)}
 
         </div>
+
+        ${deleteButton("deleteChat",chat.docId || chat.id || "")}
 
         </div>
 
@@ -5557,7 +5779,11 @@ function subscribeChat(){
             chats =
                 snapshot.docs.map(function(item){
 
-                    return item.data();
+                    const data = item.data();
+
+                    data.docId = item.id;
+
+                    return data;
 
                 });
 
@@ -6098,7 +6324,11 @@ function subscribeRoomChat(roomId){
                     sortByTime(
                         snapshot.docs.map(function(item){
 
-                            return item.data();
+                            const data = item.data();
+
+                            data.docId = item.id;
+
+                            return data;
 
                         })
                     );
@@ -9517,6 +9747,8 @@ function loadRoomChat(){
         ${escapeHTML(chat.time)}
 
         </div>
+
+        ${deleteButton("deleteRoomChat",chat.docId || chat.id || "")}
 
         </div>
 
