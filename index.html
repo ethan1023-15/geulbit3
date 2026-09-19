@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>학교 베타 버전</title>
+<title>글빛초등학교</title>
 
 <style>
 *{
@@ -33,9 +33,33 @@ header{
 }
 
 .logo{
-    color:#2563eb;
-    font-size:26px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#1e3a8a;
+    font-size:22px;
     font-weight:bold;
+}
+
+.logoMark{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    font-size:15px;
+    letter-spacing:-1px;
+}
+
+.logoName{
+    letter-spacing:-0.5px;
+}
+
+#buildTag{
+    font-weight:normal;
 }
 
 nav{
@@ -98,6 +122,29 @@ h3{
     text-align:center;
     color:#64748b;
     margin-bottom:25px;
+}
+
+.schoolMark{
+    width:76px;
+    height:76px;
+    margin:0 auto 14px;
+    border-radius:22px;
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    font-size:26px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    letter-spacing:-1px;
+}
+
+.schoolFooter{
+    text-align:center;
+    color:#94a3b8;
+    font-size:12px;
+    padding:18px 10px 30px;
+    line-height:1.7;
 }
 
 .icon{
@@ -691,8 +738,9 @@ hr{
 <header>
 
 <div class="logo">
-🏫 SchoolHub
-<span id="buildTag" class="smallText" style="margin-left:8px;"></span>
+<span class="logoMark">글빛</span>
+<span class="logoName">글빛초등학교</span>
+<span id="buildTag" class="smallText"></span>
 </div>
 
 <nav id="topNav">
@@ -773,14 +821,14 @@ disabled
 
 <div class="box smallBox">
 
-<div class="icon">🏫</div>
+<div class="schoolMark">글빛</div>
 
 <h1 class="title">
-SchoolHub 회원가입
+글빛초등학교 회원가입
 </h1>
 
 <p class="sub">
-학교 플랫폼을 이용하려면 회원가입을 해주세요.
+글빛초등학교 학생과 선생님을 위한 공간입니다.
 </p>
 
 <div class="notice">
@@ -933,10 +981,10 @@ onclick="showPage('loginPage')"
 
 <div class="box smallBox">
 
-<div class="icon">🔐</div>
+<div class="schoolMark">글빛</div>
 
 <h1 class="title">
-SchoolHub 로그인
+글빛초등학교 로그인
 </h1>
 
 <p class="sub">
@@ -1062,7 +1110,7 @@ onclick="showPage('signupPage')"
 
 <div class="welcome">
 
-<h1>🏠 SchoolHub</h1>
+<h1>글빛초등학교</h1>
 
 <p id="welcomeText"></p>
 
@@ -1965,7 +2013,7 @@ onclick="deleteAccount()"
 
 <div id="resetArea" class="hidden">
 
-<h3>⚠️ SchoolHub 전체 초기화</h3>
+<h3>⚠️ 전체 초기화</h3>
 
 <p class="smallText">
 선생님과 학생회 계정만 실행할 수 있습니다.
@@ -1997,6 +2045,12 @@ onclick="resetAllData()"
 </div>
 
 
+<div class="schoolFooter">
+글빛초등학교 · 학생 자치 공간
+<br>
+이곳에 올린 글은 선생님과 학생회가 확인합니다.
+</div>
+
 <div id="toast"></div>
 
 
@@ -2011,7 +2065,7 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-20";
+const BUILD_ID = "2026-08-30-21";
 
 
 const MANAGER_PASSWORD = "2023";
