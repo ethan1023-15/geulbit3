@@ -1110,10 +1110,6 @@ onclick="showPage('signupPage')"
 🍱<br>급식
 </button>
 
-<button onclick="openPage('schedulePage')">
-📅<br>시간표
-</button>
-
 <button onclick="openPage('inquiryPage')">
 ✉️<br>문의사항
 </button>
@@ -1293,6 +1289,8 @@ onclick="backDashboard()"
 </div>
 
 <div id="inquiryOnlineState"></div>
+
+<div id="inquiryNotice"></div>
 
 <h2>새 문의 쓰기</h2>
 
@@ -2013,7 +2011,7 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-18";
+const BUILD_ID = "2026-08-30-20";
 
 
 const MANAGER_PASSWORD = "2023";
@@ -7584,6 +7582,59 @@ function replyToRoomNotice(postId){
 }
 
 
+/* =====================================================
+문의사항 접수
+
+올라온 문의는 학생회가 받습니다.
+학생회와 관리자만 전체 목록을 볼 수 있고,
+나머지는 자기가 올린 문의만 보입니다.
+===================================================== */
+
+function canReceiveInquiries(){
+
+    if(!currentUser){
+
+        return false;
+
+    }
+
+
+    return(
+        superMode ||
+        currentUser.role === "council" ||
+        currentUser.role === "admin"
+    );
+
+}
+
+
+function isMyPost(item){
+
+    if(!currentUser || !item){
+
+        return false;
+
+    }
+
+
+    if(item.userKey){
+
+        return item.userKey === createUserKey(currentUser);
+
+    }
+
+
+    return(
+        item.name === currentUser.name &&
+        String(item.grade) === String(currentUser.grade) &&
+        String(item.classNumber) === String(currentUser.classNumber) &&
+        String(item.studentNumber || "") ===
+            String(currentUser.studentNumber || "")
+    );
+
+}
+
+
 function getAuthorLabel(item){
 
     if(!item){
@@ -7626,6 +7677,8 @@ function getAuthorLabel(item){
 function makeAuthorFields(){
 
     return{
+
+        userKey:createUserKey(currentUser),
 
         name:currentUser.name,
 
@@ -7926,24 +7979,39 @@ function loadInquiries(){
     box.innerHTML="";
 
 
-    if(inquiries.length === 0){
+    const notice =
+        document.getElementById("inquiryNotice");
 
-        box.innerHTML=`
-        <div class="empty">
-        아직 등록된 문의가 없습니다.
-        </div>`;
 
-        return;
+    if(notice){
+
+        notice.innerHTML =
+            canReceiveInquiries()
+                ? `<div class="notice">
+                   🏛 학생회 전용 화면입니다.
+                   올라온 문의를 모두 볼 수 있습니다.
+                   </div>`
+                : `<div class="notice">
+                   올린 문의는 학생회에게 전달됩니다.
+                   이 화면에는 내가 올린 문의만 보입니다.
+                   </div>`;
 
     }
 
 
     /*
-    최근에 올린 문의가 위로 오게 합니다.
+    학생회와 관리자만 전체 문의를 봅니다.
+    그 외에는 자기가 올린 문의만 보입니다.
     */
 
+    const visible =
+        canReceiveInquiries()
+            ? [...inquiries]
+            : inquiries.filter(isMyPost);
+
+
     const list =
-        [...inquiries].sort(function(a,b){
+        visible.sort(function(a,b){
 
             return(
                 Number(b.createdAt || 0) -
@@ -7951,6 +8019,22 @@ function loadInquiries(){
             );
 
         });
+
+
+    if(list.length === 0){
+
+        box.innerHTML=`
+        <div class="empty">
+        ${
+            canReceiveInquiries()
+                ? "아직 등록된 문의가 없습니다."
+                : "내가 올린 문의가 없습니다."
+        }
+        </div>`;
+
+        return;
+
+    }
 
 
     list.forEach(function(item){
