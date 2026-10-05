@@ -7,6 +7,267 @@
 <title>글빛초등학교</title>
 
 <style>
+
+/* =====================================================
+테마
+
+색을 바꿔 쓸 수 있도록 모든 색을 변수로 묶었습니다.
+프로필 화면에서 고르면 그 기기에 저장됩니다.
+===================================================== */
+
+:root,
+body[data-theme="sky"]{
+    --main:#2563eb;
+    --main-dark:#1d4ed8;
+    --main-soft:#60a5fa;
+    --main-pale:#dbeafe;
+    --main-line:#bfdbfe;
+    --main-deep:#1e3a8a;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --soft:#f8fafc;
+    --line:#e2e8f0;
+    --line-strong:#cbd5e1;
+    --text:#1e293b;
+}
+
+body[data-theme="forest"]{
+    --main:#15803d;
+    --main-dark:#166534;
+    --main-soft:#4ade80;
+    --main-pale:#dcfce7;
+    --main-line:#bbf7d0;
+    --main-deep:#14532d;
+    --bg:#f2f7f3;
+    --card:#ffffff;
+    --soft:#f6faf7;
+    --line:#dfe9e1;
+    --line-strong:#c7d8ca;
+    --text:#1c2b22;
+}
+
+body[data-theme="grape"]{
+    --main:#7c3aed;
+    --main-dark:#6d28d9;
+    --main-soft:#a78bfa;
+    --main-pale:#ede9fe;
+    --main-line:#ddd6fe;
+    --main-deep:#4c1d95;
+    --bg:#f5f3fb;
+    --card:#ffffff;
+    --soft:#faf8ff;
+    --line:#e6e1f2;
+    --line-strong:#d0c7e6;
+    --text:#241f33;
+}
+
+body[data-theme="sunset"]{
+    --main:#ea580c;
+    --main-dark:#c2410c;
+    --main-soft:#fb923c;
+    --main-pale:#ffedd5;
+    --main-line:#fed7aa;
+    --main-deep:#7c2d12;
+    --bg:#fbf5f1;
+    --card:#ffffff;
+    --soft:#fffaf6;
+    --line:#f0e3d9;
+    --line-strong:#e2cbbb;
+    --text:#2e2019;
+}
+
+body[data-theme="night"]{
+    --main:#60a5fa;
+    --main-dark:#3b82f6;
+    --main-soft:#93c5fd;
+    --main-pale:#1e293b;
+    --main-line:#334155;
+    --main-deep:#bfdbfe;
+    --bg:#0f172a;
+    --card:#1e293b;
+    --soft:#172033;
+    --line:#334155;
+    --line-strong:#475569;
+    --text:#e2e8f0;
+}
+
+body[data-theme="night"] input,
+body[data-theme="night"] select,
+body[data-theme="night"] textarea{
+    background:#0f172a;
+    color:#e2e8f0;
+}
+
+body[data-theme="night"] .empty,
+body[data-theme="night"] .info,
+body[data-theme="night"] .smallText{
+    color:#94a3b8;
+}
+
+body[data-theme="rose"]{
+    --main:#e11d48;
+    --main-dark:#be123c;
+    --main-soft:#fb7185;
+    --main-pale:#ffe4e6;
+    --main-line:#fecdd3;
+    --main-deep:#881337;
+    --bg:#fdf4f5;
+    --card:#ffffff;
+    --soft:#fff8f9;
+    --line:#f3e0e3;
+    --line-strong:#e5c5ca;
+    --text:#2d1b20;
+}
+
+body[data-theme="mint"]{
+    --main:#0d9488;
+    --main-dark:#0f766e;
+    --main-soft:#5eead4;
+    --main-pale:#ccfbf1;
+    --main-line:#99f6e4;
+    --main-deep:#134e4a;
+    --bg:#f0f8f7;
+    --card:#ffffff;
+    --soft:#f6fbfa;
+    --line:#dcebe9;
+    --line-strong:#c2dcd8;
+    --text:#17282a;
+}
+
+body[data-theme="sand"]{
+    --main:#b45309;
+    --main-dark:#92400e;
+    --main-soft:#fbbf24;
+    --main-pale:#fef3c7;
+    --main-line:#fde68a;
+    --main-deep:#78350f;
+    --bg:#faf7f0;
+    --card:#ffffff;
+    --soft:#fdfbf6;
+    --line:#ece4d5;
+    --line-strong:#d9ccb5;
+    --text:#2b2419;
+}
+
+body[data-theme="ink"]{
+    --main:#475569;
+    --main-dark:#334155;
+    --main-soft:#94a3b8;
+    --main-pale:#e2e8f0;
+    --main-line:#cbd5e1;
+    --main-deep:#1e293b;
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --soft:#fafbfc;
+    --line:#e4e7ec;
+    --line-strong:#cdd3db;
+    --text:#1f2733;
+}
+
+/* =====================================================
+테마 고르는 화면
+
+색만 바뀌는 게 아니라
+작은 미리보기로 어떤 느낌인지 보여줍니다.
+===================================================== */
+
+.themeGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+    gap:16px;
+    margin-top:18px;
+}
+
+.themeCard{
+    border:2px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    background:var(--card);
+    cursor:pointer;
+    transition:.15s;
+}
+
+.themeCard:hover{
+    transform:translateY(-3px);
+}
+
+.themeCard.on{
+    border-color:var(--main);
+    box-shadow:0 0 0 3px var(--main-pale);
+}
+
+.themePreview{
+    height:104px;
+    padding:10px;
+}
+
+.themeBar{
+    height:18px;
+    border-radius:6px;
+    margin-bottom:8px;
+}
+
+.themeChip{
+    height:12px;
+    border-radius:5px;
+    margin-bottom:6px;
+}
+
+.themeBtn{
+    height:22px;
+    border-radius:8px;
+}
+
+.themeLabel{
+    padding:10px 12px;
+    border-top:1px solid var(--line);
+    font-size:14px;
+    font-weight:bold;
+    color:var(--text);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.themeTag{
+    font-size:11px;
+    font-weight:normal;
+    color:var(--main);
+}
+
+.themeRow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:12px;
+}
+
+.themeDot{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+    border:3px solid transparent;
+    cursor:pointer;
+    position:relative;
+}
+
+.themeDot.on{
+    border-color:var(--text);
+}
+
+.themeName{
+    display:block;
+    text-align:center;
+    font-size:12px;
+    color:var(--text);
+    margin-top:4px;
+}
+
+.themeItem{
+    width:62px;
+}
+
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -15,13 +276,13 @@
 }
 
 body{
-    background:#f1f5f9;
-    color:#1e293b;
+    background:var(--bg);
+    color:var(--text);
 }
 
 header{
     min-height:70px;
-    background:#fff;
+    background:var(--card);
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -36,7 +297,7 @@ header{
     display:flex;
     align-items:center;
     gap:10px;
-    color:#1e3a8a;
+    color:var(--main-deep);
     font-size:22px;
     font-weight:bold;
 }
@@ -48,7 +309,7 @@ header{
     width:38px;
     height:38px;
     border-radius:12px;
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    background:linear-gradient(135deg,var(--main),var(--main-soft));
     color:white;
     font-size:15px;
     letter-spacing:-1px;
@@ -78,7 +339,7 @@ nav button{
 }
 
 nav button:hover{
-    color:#2563eb;
+    color:var(--main);
 }
 
 .page{
@@ -91,7 +352,7 @@ nav button:hover{
     width:100%;
     max-width:900px;
     margin:auto;
-    background:white;
+    background:var(--card);
     padding:30px;
     border-radius:20px;
     box-shadow:0 5px 20px #ddd;
@@ -114,7 +375,7 @@ h3{
 }
 
 .title{
-    color:#2563eb;
+    color:var(--main);
     text-align:center;
 }
 
@@ -129,7 +390,7 @@ h3{
     height:76px;
     margin:0 auto 14px;
     border-radius:22px;
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    background:linear-gradient(135deg,var(--main),var(--main-soft));
     color:white;
     font-size:26px;
     font-weight:bold;
@@ -159,7 +420,7 @@ textarea{
     width:100%;
     padding:13px;
     margin:7px 0;
-    border:1px solid #cbd5e1;
+    border:1px solid var(--line-strong);
     border-radius:10px;
     font-size:15px;
     outline:none;
@@ -168,8 +429,8 @@ textarea{
 input:focus,
 select:focus,
 textarea:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px #dbeafe;
+    border-color:var(--main);
+    box-shadow:0 0 0 3px var(--main-pale);
 }
 
 textarea{
@@ -183,14 +444,14 @@ textarea{
     margin-top:10px;
     border:0;
     border-radius:10px;
-    background:#2563eb;
+    background:var(--main);
     color:white;
     font-size:16px;
     cursor:pointer;
 }
 
 .btn:hover{
-    background:#1d4ed8;
+    background:var(--main-dark);
 }
 
 .btn:disabled{
@@ -243,7 +504,7 @@ textarea{
 }
 
 .welcome{
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    background:linear-gradient(135deg,var(--main),var(--main-soft));
     color:white;
     padding:25px;
     border-radius:18px;
@@ -280,8 +541,8 @@ textarea{
 }
 
 .dashMain{
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:20px;
     padding:15px;
 }
@@ -289,8 +550,8 @@ textarea{
 .extraMenu{
     margin-top:15px;
     padding:18px;
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:15px;
 }
 
@@ -304,7 +565,7 @@ textarea{
     min-height:110px;
     border:0;
     border-radius:17px;
-    background:#2563eb;
+    background:var(--main);
     color:white;
     font-size:17px;
     cursor:pointer;
@@ -323,15 +584,15 @@ textarea{
     height:400px;
     overflow-y:auto;
     padding:15px;
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:15px;
     margin:15px 0;
 }
 
 .chat{
-    background:white;
-    border:1px solid #e2e8f0;
+    background:var(--card);
+    border:1px solid var(--line);
     padding:12px;
     border-radius:12px;
     margin-bottom:10px;
@@ -339,7 +600,7 @@ textarea{
 
 .chatName{
     font-weight:bold;
-    color:#2563eb;
+    color:var(--main);
 }
 
 .chatTime{
@@ -358,15 +619,15 @@ textarea{
 }
 
 .item{
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:13px;
     padding:17px;
     margin-top:12px;
 }
 
 .item h3{
-    color:#2563eb;
+    color:var(--main);
 }
 
 .info{
@@ -379,8 +640,8 @@ textarea{
     display:inline-block;
     padding:4px 8px;
     border-radius:999px;
-    background:#dbeafe;
-    color:#1d4ed8;
+    background:var(--main-pale);
+    color:var(--main-dark);
     font-size:12px;
     font-weight:bold;
 }
@@ -418,10 +679,10 @@ textarea{
 .notice{
     padding:15px;
     border-radius:12px;
-    background:#eff6ff;
-    color:#1e40af;
+    background:var(--main-pale);
+    color:var(--main-deep);
     margin-bottom:15px;
-    border:1px solid #bfdbfe;
+    border:1px solid var(--main-line);
 }
 
 .dangerNotice{
@@ -431,8 +692,8 @@ textarea{
 }
 
 .roomCard{
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:15px;
     padding:18px;
     margin-top:12px;
@@ -451,8 +712,8 @@ textarea{
 }
 
 .roomMessage{
-    background:white;
-    border:1px solid #e2e8f0;
+    background:var(--card);
+    border:1px solid var(--line);
     border-radius:12px;
     padding:12px;
     margin-bottom:10px;
@@ -467,8 +728,8 @@ textarea{
     height:400px;
     overflow-y:auto;
     padding:15px;
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:15px;
     margin:15px 0;
 }
@@ -481,19 +742,19 @@ table{
 
 th,
 td{
-    border:1px solid #cbd5e1;
+    border:1px solid var(--line-strong);
     padding:12px;
     text-align:center;
 }
 
 th{
-    background:#eff6ff;
-    color:#1d4ed8;
+    background:var(--main-pale);
+    color:var(--main-dark);
 }
 
 hr{
     border:0;
-    border-top:1px solid #e2e8f0;
+    border-top:1px solid var(--line);
 }
 
 .empty{
@@ -525,7 +786,7 @@ hr{
     right:0;
     bottom:0;
     background:#0f172a;
-    color:#e2e8f0;
+    color:var(--line);
     z-index:20000;
     padding:24px;
     align-items:center;
@@ -555,7 +816,7 @@ hr{
 
 .lockText{
     line-height:1.9;
-    color:#cbd5e1;
+    color:var(--line-strong);
 }
 
 #betaOverlay{
@@ -577,7 +838,7 @@ hr{
 }
 
 .betaBox{
-    background:#fff;
+    background:var(--card);
     border-radius:20px;
     padding:26px;
     width:100%;
@@ -587,9 +848,9 @@ hr{
 .betaText{
     max-height:210px;
     overflow-y:auto;
-    border:1px solid #e2e8f0;
+    border:1px solid var(--line);
     border-radius:12px;
-    background:#f8fafc;
+    background:var(--soft);
     padding:16px;
     line-height:1.9;
     margin:15px 0;
@@ -608,12 +869,12 @@ hr{
 #resetArea{
     margin-top:25px;
     padding-top:25px;
-    border-top:1px solid #e2e8f0;
+    border-top:1px solid var(--line);
 }
 
 .inquiryCard{
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
+    background:var(--soft);
+    border:1px solid var(--line);
     border-radius:14px;
     padding:18px;
     margin-top:14px;
@@ -625,7 +886,7 @@ hr{
 }
 
 .inquiryLabel{
-    color:#2563eb;
+    color:var(--main);
     font-weight:bold;
     margin-right:6px;
 }
@@ -638,12 +899,12 @@ hr{
 .replyBox{
     margin-top:14px;
     padding-top:12px;
-    border-top:1px dashed #cbd5e1;
+    border-top:1px dashed var(--line-strong);
 }
 
 .replyItem{
-    background:white;
-    border:1px solid #e2e8f0;
+    background:var(--card);
+    border:1px solid var(--line);
     border-radius:10px;
     padding:10px 12px;
     margin-bottom:8px;
@@ -660,14 +921,14 @@ hr{
     height:20px;
     vertical-align:-4px;
     margin-right:6px;
-    color:#2563eb;
+    color:var(--main);
 }
 
 .mealHead{
     display:flex;
     align-items:center;
     gap:8px;
-    color:#2563eb;
+    color:var(--main);
     font-weight:bold;
     margin-bottom:8px;
 }
@@ -776,22 +1037,17 @@ hr{
 <div id="betaText" class="betaText">
 
 <p>
-이 사이트는 아직 베타(시험) 버전입니다.
+글빛초등학교 학생과 선생님을 위한 공간입니다.
 </p>
 
 <p style="margin-top:12px;">
-부족한 점이 있다면 문의사항에 넣어주세요.
+서로 기분 상하지 않게,
+고운 말로 이야기해 주세요.
 </p>
 
 <p style="margin-top:12px;">
-시험 중인 기능이라 저장한 내용이
-예고 없이 사라질 수 있습니다.
-중요한 내용은 따로 보관해 주세요.
-</p>
-
-<p style="margin-top:12px;">
-문의사항은 로그인한 뒤
-대시보드에서 열 수 있습니다.
+불편한 점은 문의사항에 남기면
+학생회가 확인합니다.
 </p>
 
 </div>
@@ -1134,10 +1390,6 @@ onclick="showPage('signupPage')"
 
 <div class="menu">
 
-<button onclick="openPage('chatPage')">
-💬<br>전체 채팅
-</button>
-
 <button onclick="openPage('roomListPage')">
 👥<br>반 단체방
 </button>
@@ -1177,6 +1429,13 @@ class="btn gray"
 onclick="openPage('profilePage')"
 >
 👤 내 프로필
+</button>
+
+<button
+class="btn gray"
+onclick="openPage('themePage')"
+>
+🎨 테마 바꾸기
 </button>
 
 <button
@@ -1304,6 +1563,35 @@ onclick="createRoom()"
 <div id="roomPermission"></div>
 
 <div id="roomList"></div>
+
+<button
+class="btn gray"
+onclick="backDashboard()"
+>
+← 기능 선택
+</button>
+
+</div>
+</div>
+
+
+<!-- =========================
+테마
+========================= -->
+
+<div id="themePage" class="page">
+
+<div class="box">
+
+<h1>🎨 테마</h1>
+
+<div class="notice">
+마음에 드는 색을 고르세요.
+고른 색은 이 기기에만 적용되고,
+다음에 들어와도 그대로 남아 있습니다.
+</div>
+
+<div id="themePicker" class="themeGrid"></div>
 
 <button
 class="btn gray"
@@ -2065,10 +2353,10 @@ onclick="resetAllData()"
 값을 바꾸려면 아래 따옴표 안만 고치면 됩니다.
 ===================================================== */
 
-const BUILD_ID = "2026-08-30-21";
+const BUILD_ID = "2026-10-05-04";
 
 
-const MANAGER_PASSWORD = "2023";
+const MANAGER_PASSWORD = "gb7284";
 
 
 /* =====================================================
@@ -2081,7 +2369,7 @@ const MANAGER_PASSWORD = "2023";
 로그아웃하면 풀립니다.
 ===================================================== */
 
-const SUPER_PASSWORD = "2023.3.1";
+const SUPER_PASSWORD = "gb-admin-5391";
 
 
 let superMode = false;
@@ -2094,7 +2382,7 @@ let superMode = false;
 초기화 버튼을 누를 때만 사용합니다.
 ===================================================== */
 
-const RESET_PASSWORD = "2023.3.1.1,2,3,4,5단지";
+const RESET_PASSWORD = "delete-geulbit-2026-ok";
 
 
 /* =====================================================
@@ -2747,6 +3035,137 @@ async function hashPassword(password,salt){
 /* =====================================================
 페이지
 ===================================================== */
+
+/* =====================================================
+테마
+
+고른 색은 이 기기에 저장됩니다.
+사람마다 다른 색으로 쓸 수 있습니다.
+===================================================== */
+
+const THEMES = [
+
+    { key:"sky",    name:"하늘",   main:"#2563eb", bg:"#f1f5f9", soft:"#dbeafe" },
+    { key:"forest", name:"숲",     main:"#15803d", bg:"#f2f7f3", soft:"#dcfce7" },
+    { key:"grape",  name:"포도",   main:"#7c3aed", bg:"#f5f3fb", soft:"#ede9fe" },
+    { key:"sunset", name:"노을",   main:"#ea580c", bg:"#fbf5f1", soft:"#ffedd5" },
+    { key:"rose",   name:"장미",   main:"#e11d48", bg:"#fdf4f5", soft:"#ffe4e6" },
+    { key:"mint",   name:"민트",   main:"#0d9488", bg:"#f0f8f7", soft:"#ccfbf1" },
+    { key:"sand",   name:"모래",   main:"#b45309", bg:"#faf7f0", soft:"#fef3c7" },
+    { key:"ink",    name:"먹",     main:"#475569", bg:"#f4f5f7", soft:"#e2e8f0" },
+    { key:"night",  name:"밤",     main:"#60a5fa", bg:"#0f172a", soft:"#1e293b" }
+
+];
+
+
+function getTheme(){
+
+    const saved =
+        storageGet("schoolhub_theme");
+
+
+    const found =
+        THEMES.some(function(item){
+
+            return item.key === saved;
+
+        });
+
+
+    return found ? saved : "sky";
+
+}
+
+
+function applyTheme(key){
+
+    document.body.setAttribute("data-theme",key);
+
+}
+
+
+function setTheme(key){
+
+    storageSet("schoolhub_theme",key);
+
+    applyTheme(key);
+
+    loadThemePicker();
+
+    showToast("테마를 바꿨습니다.");
+
+}
+
+
+function loadThemePicker(){
+
+    const box =
+        document.getElementById("themePicker");
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+    const current =
+        getTheme();
+
+
+    box.innerHTML =
+        THEMES.map(function(item){
+
+            return `
+
+            <div
+            class="themeCard ${item.key === current ? "on" : ""}"
+            onclick="setTheme('${item.key}')"
+            >
+
+            <div
+            class="themePreview"
+            style="background:${item.bg};"
+            >
+
+            <div
+            class="themeBar"
+            style="background:${item.main};"
+            ></div>
+
+            <div
+            class="themeChip"
+            style="background:${item.soft};width:80%;"
+            ></div>
+
+            <div
+            class="themeChip"
+            style="background:${item.soft};width:60%;"
+            ></div>
+
+            <div
+            class="themeBtn"
+            style="background:${item.main};"
+            ></div>
+
+            </div>
+
+            <div class="themeLabel">
+            ${item.name}
+            <span class="themeTag">
+            ${item.key === current ? "사용 중" : "고르기"}
+            </span>
+            </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+}
+
 
 function updateTopNav(){
 
@@ -3685,6 +4104,13 @@ function openPage(id){
     }
 
 
+    if(id === "themePage"){
+
+        loadThemePicker();
+
+    }
+
+
     if(id === "inquiryPage"){
 
         loadInquiries();
@@ -3767,6 +4193,9 @@ function logout(){
 ===================================================== */
 
 function loadProfile(){
+
+    loadThemePicker();
+
 
     const box =
         document.getElementById("profileData");
@@ -5333,6 +5762,15 @@ LOCK_END_HOUR 는 열리는 시각입니다.
 항상 한국 시각을 기준으로 계산합니다.
 ===================================================== */
 
+/*
+시간 제한 사용 여부입니다.
+false 이면 언제든 쓸 수 있습니다.
+다시 막으려면 true 로 바꾸세요.
+*/
+
+const LOCK_ENABLED = true;
+
+
 const LOCK_START_HOUR = 20;
 
 const LOCK_END_HOUR = 6;
@@ -5381,6 +5819,13 @@ function isLockedHour(hour){
 
 
 function isLockedNow(){
+
+    if(!LOCK_ENABLED){
+
+        return false;
+
+    }
+
 
     return isLockedHour(
         kstNow().getHours()
@@ -8217,7 +8662,7 @@ let betaScrolled = false;
 
 let betaWaited = false;
 
-let betaLeft = 5;
+let betaLeft = 3;
 
 
 function updateBetaButton(){
@@ -11983,6 +12428,9 @@ async function resetAllData(){
 ===================================================== */
 
 function initialize(){
+
+    applyTheme(getTheme());
+
 
     const buildTag =
         document.getElementById("buildTag");
